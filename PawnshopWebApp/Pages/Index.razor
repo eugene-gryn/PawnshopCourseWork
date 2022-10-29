@@ -1,0 +1,33 @@
+﻿@inherits IndexBase
+@page "/"
+
+<PageTitle>Вхід</PageTitle>
+
+<div class="vh-100 d-flex justify-content-center align-items-center">
+    <div class="shadow rounded p-5" style="max-width: 75%">
+        
+
+        @if (SuccessfulLogin is false) {
+        }
+
+        <h2 class="fw-bold mb-2 text-uppercase">Панель управління</h2>
+        
+        <p class="mb-5">Введіть свій логін та пароль, щоб попасти в систему! Якщо у вас немає такої інформації зверніться до адміністрації</p>
+
+        <div class="mb-3">
+            <label for="email" class="form-label ">Ваш логін</label>
+            <input @bind="Login" type="text" class="form-control" id="text" placeholder="Логін...">
+        </div>
+
+        <div class="mb-3">
+            <label for="password" class="form-label ">Пароль</label>
+            <input @bind="Password" type="password" class="form-control" id="password" placeholder="*******">
+        </div>
+
+        <div class="d-grid">
+            <button @onclick="TryLogin" class="btn btn-outline-dark">Ввійти</button>
+        </div>
+    </div>
+</div>
+
+
