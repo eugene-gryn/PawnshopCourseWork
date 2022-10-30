@@ -1,0 +1,21 @@
+﻿@inherits ComponentBase
+
+
+<div class="d-flex align-items-center flex-wrap">
+    <p class="m-0">@LabelText</p>
+    @foreach (var attributeValue in Filters) {
+        <button @onclick="() => OnChangedIndex(attributeValue)"
+                class="btn @(attributeValue == Filters[SelectedIndex] ? StyleSelected : Style) rounded rounded-pill px-3 py-1 mx-2 my-2"
+                value="@attributeValue">
+            @attributeValue
+        </button>
+    }
+</div>
+
+@code {
+
+    private const string StyleSelected = "btn-dark";
+    private const string Style = "btn-outline-dark";
+
+    private const string LabelText = "Сортуванння за:";
+}
