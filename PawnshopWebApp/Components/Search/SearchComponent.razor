@@ -1,0 +1,51 @@
+﻿@inherits ComponentBase
+
+<div class="d-flex">
+    <input @onchange="args => ChangeInputQuery(args.Value?.ToString())" class="form-control" type="search" placeholder="Пошук @Filters[SelectedIndex]" aria-label="Search">
+    <div class="dropdown">
+        <button @onclick="ChangeDisplay"
+                class="btn btn-outline-warning mx-1 dropdown-toggle"
+                id="search-dropdown-button" data-toggle="dropdown" aria-haspopup="true"
+                type="button" aria-expanded="false">
+            Фільтри
+        </button>
+        <div class="dropdown-menu @Display" aria-labelledby="search-dropdown-button">
+            @foreach (var filter in Filters) {
+                <a value="@filter" @onclick="() => { ChangeIndex(filter); ChangeDisplay(); }" class="dropdown-item">@filter</a>
+            }
+        </div>
+    </div>
+
+</div>
+
+@code {
+
+    [Parameter]
+    public List<string> Filters { get; set; }
+
+    [Parameter]
+    public int SelectedIndex { get; set; }
+
+    [Parameter]
+    public EventCallback<int> OnFilterChanges { get; set; }
+
+    [Parameter]
+    public EventCallback<string?> OnQueryChange { get; set; }
+
+    public string Display = "d-none";
+
+    public void ChangeDisplay() {
+        Display = Display == "d-none" ? "d-block" : "d-none";
+    }
+
+    public void ChangeIndex(string element) {
+        var index = Filters.IndexOf(element);
+        SelectedIndex = index;
+        OnFilterChanges.InvokeAsync(index);
+    }
+
+    public void ChangeInputQuery(string? query) {
+        OnQueryChange.InvokeAsync(query);
+    }
+
+}

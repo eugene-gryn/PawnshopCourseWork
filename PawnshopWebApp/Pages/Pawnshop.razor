@@ -1,0 +1,53 @@
+﻿@using PawnshopWebApp.Components.Search
+@inherits MainMenuBase
+@page "/pawnshop"
+
+<PageTitle>Ломбарди - основний список</PageTitle>
+
+<div class="mx-3">
+    <SearchComponent Filters="SearchFilters" SelectedIndex="SelectedFilterIndex" 
+                     OnFilterChanges="ChangeIndex" OnQueryChange="ChangeQuery" />
+    
+    <hr class="my-4"/>
+
+    <SortingComponents SortingAttributes="SortingTableAttributes"/>
+</div>
+
+@code {
+    #region SearchEngineRegion
+
+    private readonly List<string> SearchFilters = new() {
+        "за розміром",
+        "за назвою",
+        "за описом"
+    };
+
+    private int SelectedFilterIndex { get; set; }
+
+    public void ChangeIndex(int index)
+    {
+        SelectedFilterIndex = index;
+        Console.WriteLine(SearchFilters[SelectedFilterIndex]);
+    }
+
+    public void ChangeQuery(string query)
+    {
+        Console.WriteLine($"{SearchFilters[SelectedFilterIndex]}: {query}");
+    }
+
+    #endregion
+
+
+    #region SortingRegion
+
+    List<string> SortingTableAttributes = new() {
+        "value 1",
+        "value 2",
+        "value 3",
+        "value 4"
+    };
+
+    #endregion
+
+
+}

@@ -1,0 +1,18 @@
+﻿@inherits ComponentBase
+
+
+<div class="d-flex align-items-center">
+    <p class="m-0">Сортуванння за: </p>
+    @foreach (var attributeValue in SortingAttributes)
+    {
+        <button class="btn btn-outline-dark rounded rounded-pill px-3 py-1 mx-2" value="@attributeValue">
+            @attributeValue
+        </button>
+    }
+</div>
+
+@code {
+
+    [Parameter] public List<string> SortingAttributes { get; set; }
+
+}

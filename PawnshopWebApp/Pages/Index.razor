@@ -3,31 +3,35 @@
 
 <PageTitle>Вхід</PageTitle>
 
-<div class="vh-100 d-flex justify-content-center align-items-center">
-    <div class="shadow rounded p-5" style="max-width: 75%">
-        
+<EditForm Model="UserLogin" OnSubmit="TryLogin">
+    <div class="vh-100 d-flex justify-content-center align-items-center">
+        <div class="shadow border-1 rounded p-5" style="max-width: 75%">
+            
+            @if (SuccessfulLogin is false) {
+                <div class="alert alert-danger pe-auto" role="alert">
+                    Не правильний логін або пароль!
+                </div>
+            }
 
-        @if (SuccessfulLogin is false) {
-        }
+            <h2 class="fw-bold mb-2 text-uppercase">Панель управління</h2>
 
-        <h2 class="fw-bold mb-2 text-uppercase">Панель управління</h2>
-        
-        <p class="mb-5">Введіть свій логін та пароль, щоб попасти в систему! Якщо у вас немає такої інформації зверніться до адміністрації</p>
+            <p class="mb-5">Введіть свій логін та пароль, щоб попасти в систему! Якщо у вас немає такої інформації зверніться до адміністрації</p>
 
-        <div class="mb-3">
-            <label for="email" class="form-label ">Ваш логін</label>
-            <input @bind="Login" type="text" class="form-control" id="text" placeholder="Логін...">
-        </div>
 
-        <div class="mb-3">
-            <label for="password" class="form-label ">Пароль</label>
-            <input @bind="Password" type="password" class="form-control" id="password" placeholder="*******">
-        </div>
-
-        <div class="d-grid">
-            <button @onclick="TryLogin" class="btn btn-outline-dark">Ввійти</button>
+            <div class="mb-3">
+                <label for="login" class="form-label ">Логін</label>
+                <InputText class="form-control" id="login" @bind-Value="UserLogin.Login" @oninput="Reset" placeholder="Логін..."/>
+            </div>
+            <div class="mb-4">
+                <label for="password" class="form-label ">Пароль</label>
+                <InputText class="form-control" id="password" type="password" @bind-Value="UserLogin.Password" @oninput="Reset" placeholder="*****" />
+            </div>
+            
+            <div class="d-grid w-50 mx-auto">
+                <button type="submit" class="btn btn-outline-dark">Ввійти</button>
+            </div>
         </div>
     </div>
-</div>
 
+</EditForm>
 
