@@ -5,6 +5,10 @@ VisualStudioVersion = 17.3.32825.248
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PawnshopWebApp", "PawnshopWebApp\PawnshopWebApp.csproj", "{4D6AA5E6-0A4F-4440-89BA-CFD34ADF6923}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataAccessLayer", "DataAccessLayer\DataAccessLayer.csproj", "{08D8540D-D71D-4F4B-AA52-7E6A03D9E61F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BussinessLogic", "BussinessLogic\BussinessLogic.csproj", "{F1E1C3C8-C42C-4683-8E2C-7207E232530A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +19,14 @@ Global
 		{4D6AA5E6-0A4F-4440-89BA-CFD34ADF6923}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4D6AA5E6-0A4F-4440-89BA-CFD34ADF6923}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4D6AA5E6-0A4F-4440-89BA-CFD34ADF6923}.Release|Any CPU.Build.0 = Release|Any CPU
+		{08D8540D-D71D-4F4B-AA52-7E6A03D9E61F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{08D8540D-D71D-4F4B-AA52-7E6A03D9E61F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{08D8540D-D71D-4F4B-AA52-7E6A03D9E61F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{08D8540D-D71D-4F4B-AA52-7E6A03D9E61F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F1E1C3C8-C42C-4683-8E2C-7207E232530A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F1E1C3C8-C42C-4683-8E2C-7207E232530A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F1E1C3C8-C42C-4683-8E2C-7207E232530A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F1E1C3C8-C42C-4683-8E2C-7207E232530A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
