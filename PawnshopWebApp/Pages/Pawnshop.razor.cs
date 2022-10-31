@@ -1,10 +1,6 @@
-﻿using Blazored.LocalStorage;
-using Microsoft.AspNetCore.Components;
-using PawnshopWebApp.Shared;
-using PawnshopWebApp.Services;
+﻿using Microsoft.AspNetCore.Components;
 
 namespace PawnshopWebApp.Pages;
 
 public class MainMenuBase : PawnshopBaseComponent {
-
 }

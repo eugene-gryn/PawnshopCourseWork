@@ -1,16 +1,20 @@
-﻿@using PawnshopWebApp.Components.Search
+﻿@using DataAccessLayer.Context
+@using Microsoft.EntityFrameworkCore
+@using PawnshopWebApp.Components.Search
 @inherits MainMenuBase
 @page "/pawnshop"
+
+@inject IDbContextFactory<PawnshopDbContext> Factory;
 
 <PageTitle>Ломбарди - основний список</PageTitle>
 
 <div class="d-flex flex-row justify-content-between align-items-center mx-3 my-4 flex-wrap">
     <div class="my-2">
-        <SortingComponent 
+        <SortingComponent
             OnFilterChanged="OnSortingIndexChanged"
             Filters="_testSortingAttributes"
-            SelectedIndex="_selectedIndexSort"
-        ></SortingComponent>
+            SelectedIndex="_selectedIndexSort">
+        </SortingComponent>
     </div>
 
     <div class="my-2">
@@ -18,14 +22,16 @@
             OnFilterChanged="OnSearchingChangedIndex"
             OnQueryChanged="OnSearchingChangedQuery"
             Filters="_testSearchPrinciples"
-            SelectedIndex="_selectedIndexSearch"></SearchComponent>
+            SelectedIndex="_selectedIndexSearch">
+        </SearchComponent>
     </div>
-
 
 
 </div>
 
 @code {
+
+
     #region SearchEngineRegion
 
     private readonly List<string> _testSearchPrinciples = new() {
@@ -34,35 +40,32 @@
         "за описом"
     };
 
-    private int _selectedIndexSearch = 0;
+    private int _selectedIndexSearch;
 
-    private void OnSearchingChangedIndex(int index)
-    {
+    private void OnSearchingChangedIndex(int index) {
         _selectedIndexSearch = index;
         Console.WriteLine(_testSearchPrinciples[_selectedIndexSearch]);
     }
 
-    private void OnSearchingChangedQuery(string? query)
-    {
+    private void OnSearchingChangedQuery(string? query) {
         Console.WriteLine($"{_testSearchPrinciples[_selectedIndexSearch]}: {query}");
     }
-    
+
     #endregion
 
 
     #region SortingRegion
 
-    private List<string> _testSortingAttributes = new() {
+    private readonly List<string> _testSortingAttributes = new() {
         "По імені",
         "По ціні",
         "По назві",
         "По якості"
     };
 
-    private int _selectedIndexSort = 0;
+    private int _selectedIndexSort;
 
-    private void OnSortingIndexChanged(int obj)
-    {
+    private void OnSortingIndexChanged(int obj) {
         _selectedIndexSort = obj;
         Console.WriteLine($"Sorting by {_testSortingAttributes[_selectedIndexSort]}");
     }
@@ -70,6 +73,18 @@
     #endregion
 
 
+    protected override Task<Task> OnInitializedAsync() {
+        using var context = Factory.CreateDbContext();
+
+
+        var list = context.Customers.ToList();
+
+        foreach (var el in list) {
+            Console.WriteLine(el.Id);
+        }
+
+        return base.OnInitializedAsync();
+    }
 
 
 }

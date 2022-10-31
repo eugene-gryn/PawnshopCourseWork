@@ -2,19 +2,19 @@
 
 namespace DataAccessLayer.Models;
 
+#nullable disable
 public class Pawnshop {
     [Key] public int Id { get; set; }
 
-    [Required] public int Name { get; set; }
+    [Required, StringLength(50)] public int Name { get; set; }
 
-    [Required] public City City { get; set; }
+    [Required] public int CityId { get; set; }
 
-    [Required] public string Adress { get; set; }
+    [Required, StringLength(100)] public string Adress { get; set; }
 
-    [Required] public DateTime TimeOpen { get; set; }
+    [Required] [DataType(DataType.Time)] public DateTime TimeOpen { get; set; }
 
-    [Required] public DateTime TimeClose { get; set; }
-
+    [Required] [DataType(DataType.Time)] public DateTime TimeClose { get; set; }
 
     public float MoneyAvailable { get; set; } = 0;
 
