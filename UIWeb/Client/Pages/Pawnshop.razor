@@ -1,0 +1,72 @@
+﻿@using UIWeb.Client.Components.Search;
+@inherits MainMenuBase
+@page "/pawnshop"
+
+
+<PageTitle>Ломбарди - основний список</PageTitle>
+
+<div class="d-flex flex-row justify-content-between align-items-center mx-3 my-4 flex-wrap">
+    <div class="my-2">
+        <SortingComponent
+            OnFilterChanged="OnSortingIndexChanged"
+            Filters="_testSortingAttributes"
+            SelectedIndex="_selectedIndexSort">
+        </SortingComponent>
+    </div>
+
+    <div class="my-2">
+        <SearchComponent
+            OnFilterChanged="OnSearchingChangedIndex"
+            OnQueryChanged="OnSearchingChangedQuery"
+            Filters="_testSearchPrinciples"
+            SelectedIndex="_selectedIndexSearch">
+        </SearchComponent>
+    </div>
+
+
+</div>
+
+@code {
+
+
+    #region SearchEngineRegion
+
+    private readonly List<string> _testSearchPrinciples = new() {
+        "за розміром",
+        "за назвою",
+        "за описом"
+    };
+
+    private int _selectedIndexSearch;
+
+    private void OnSearchingChangedIndex(int index) {
+        _selectedIndexSearch = index;
+        Console.WriteLine(_testSearchPrinciples[_selectedIndexSearch]);
+    }
+
+    private void OnSearchingChangedQuery(string? query) {
+        Console.WriteLine($"{_testSearchPrinciples[_selectedIndexSearch]}: {query}");
+    }
+
+    #endregion
+
+
+    #region SortingRegion
+
+    private readonly List<string> _testSortingAttributes = new() {
+        "По імені",
+        "По ціні",
+        "По назві",
+        "По якості"
+    };
+
+    private int _selectedIndexSort;
+
+    private void OnSortingIndexChanged(int obj) {
+        _selectedIndexSort = obj;
+        Console.WriteLine($"Sorting by {_testSortingAttributes[_selectedIndexSort]}");
+    }
+
+    #endregion
+
+}
