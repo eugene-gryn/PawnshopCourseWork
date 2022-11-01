@@ -11,6 +11,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\BussinessLogic\BussinessLogic.csproj" />
+    <ProjectReference Include="..\..\DataAccessLayer\DataAccessLayer.csproj" />
     <ProjectReference Include="..\Client\UIWeb.Client.csproj" />
     <ProjectReference Include="..\Shared\UIWeb.Shared.csproj" />
   </ItemGroup>

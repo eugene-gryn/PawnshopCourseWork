@@ -1,45 +1,60 @@
-﻿using Blazored.LocalStorage;
+﻿using System.Net.Http.Json;
+using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components;
-using UIWeb.Client.Models;
+using UIWeb.Shared.SharedModels;
 
 namespace UIWeb.Client.Services;
 
 // TODO valid authorization
-public class AuthorizeService
-{
+public class AuthorizeService {
     private const string Token = "login";
 
-    public readonly string RedirectPage = "/pawnshop";
     public readonly string BasePage = "/";
 
-    public AuthorizeService(ILocalStorageService storage, NavigationManager navigation)
-    {
+    public readonly string RedirectPage = "/pawnshop";
+
+
+    public AuthorizeService(ILocalStorageService storage, NavigationManager navigation, HttpClient http) {
         Storage = storage;
         Navigation = navigation;
+        Http = http;
     }
 
     public ILocalStorageService Storage { get; set; }
     public NavigationManager Navigation { get; set; }
+    public HttpClient Http { get; }
 
-    public async Task<bool> IsLoggedAsync()
-    {
-        return await Storage.GetItemAsStringAsync(Token) == "login";
+    public async Task<bool> IsLoggedAsync() {
+        var token = await Storage.GetItemAsStringAsync(Token);
+
+        if (token == null || String.IsNullOrEmpty(token)) return false;
+
+        return await Http.GetFromJsonAsync<bool>($"/authorize/validateToken?token={token}");
     }
 
 
-    public bool Login(User user)
-    {
-        if (!(user.Login == "login" && user.Password == "possword1111")) return false;
+    public async Task<bool> Login(UserLogin user) {
 
-        Storage.SetItemAsStringAsync("login", user.Login);
+        try {
+            var result = await Http.PostAsJsonAsync($"authorize/login", user);
 
-        Navigation.NavigateTo(RedirectPage);
+            var token = await result.Content.ReadAsStringAsync();
 
-        return true;
+            if (String.IsNullOrEmpty(token)) return false;
+
+            await Storage.SetItemAsStringAsync(Token, token);
+
+            Navigation.NavigateTo(RedirectPage);
+
+            return true;
+        }
+        catch (Exception e) {
+            Console.WriteLine(e);
+            return false;
+        }
     }
 
-    public void Logout()
-    {
+    public void Logout() {
         Storage.SetItemAsStringAsync(Token, "");
     }
 }
