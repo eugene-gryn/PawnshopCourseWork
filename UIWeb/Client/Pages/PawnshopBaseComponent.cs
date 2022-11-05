@@ -6,7 +6,8 @@ namespace UIWeb.Client.Pages;
 public class PawnshopBaseComponent : ComponentBase
 {
     [Inject] public AuthorizeService AuthorizeS { get; set; }
-
+    [Inject] public HttpClient Http { get; set; }
+    [Inject] public EntitiesService Server { get; set; }
 
 
     protected override async Task<Task> OnInitializedAsync()

@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Text;
 
-namespace UIWeb.Shared.SharedModels.Validation;
+namespace UIWeb.Shared.DTOs.Validation;
 
 [AttributeUsage(AttributeTargets.Property)]
 public class AgeIsGrater18 : ValidationAttribute

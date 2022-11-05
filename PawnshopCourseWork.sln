@@ -5,13 +5,13 @@ VisualStudioVersion = 17.3.32825.248
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataAccessLayer", "DataAccessLayer\DataAccessLayer.csproj", "{08D8540D-D71D-4F4B-AA52-7E6A03D9E61F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BussinessLogic", "BussinessLogic\BussinessLogic.csproj", "{F1E1C3C8-C42C-4683-8E2C-7207E232530A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BusinessLogic", "BussinessLogic\BusinessLogic.csproj", "{F1E1C3C8-C42C-4683-8E2C-7207E232530A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UIWeb.Server", "UIWeb\Server\UIWeb.Server.csproj", "{F8EEFB0E-4991-4F64-AE0A-CA2EB00BD476}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UIWeb.Server", "UIWeb\Server\UIWeb.Server.csproj", "{F8EEFB0E-4991-4F64-AE0A-CA2EB00BD476}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UIWeb.Client", "UIWeb\Client\UIWeb.Client.csproj", "{16177776-F90B-450C-B571-ACD2309AD1F5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UIWeb.Client", "UIWeb\Client\UIWeb.Client.csproj", "{16177776-F90B-450C-B571-ACD2309AD1F5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UIWeb.Shared", "UIWeb\Shared\UIWeb.Shared.csproj", "{39AB6572-15D8-4A69-8C2A-AC5D448AACA6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UIWeb.Shared", "UIWeb\Shared\UIWeb.Shared.csproj", "{39AB6572-15D8-4A69-8C2A-AC5D448AACA6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

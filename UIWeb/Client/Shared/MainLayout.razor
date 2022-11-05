@@ -1,40 +1,44 @@
 ﻿@inherits MainLayoutBase
 @inject NavigationManager Manager
 
-<div class="page">
-    <main>
-        <div>
-            @if (IsLoggedIn)
-            {
-                <nav class="navbar navbar-expand-lg navbar-light bg-light">
-                    <div class="container-fluid">
-                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                            <span class="navbar-toggler-icon"></span>
-                        </button>
-                        <div class="collapse navbar-collapse" id="navbarNav">
-                            <ul class="navbar-nav">
-                                @foreach (var item in NavBarLinks)
-                                {
-                                    <li @onclick="() => IndexChanged(item.Key)"
-                                class="nav-item">
-                                        <a class="@(SelectedElement == item.Key ? ClassSelected : ClassDeselected)" aria-current="page"
-                                   href="@item.Value">
-                                            @item.Key
-                                        </a>
-                                    </li>
-                                }
-                            </ul>
-                        </div>
-                        <button @onclick="Logout" class="btn btn-danger">Вийти</button>
-                    </div>
-                </nav>
-
-
-            }
-            @Body
+<MudThemeProvider/>
+<MudDialogProvider/>
+<MudSnackbarProvider/>
+<MudLayout>
+    <MudMainContent>
+        <div class="page">
+            <main>
+                <div>
+                    @if (IsLoggedIn) {
+                        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                            <div class="container-fluid">
+                                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                                    <span class="navbar-toggler-icon"></span>
+                                </button>
+                                <div class="collapse navbar-collapse" id="navbarNav">
+                                    <ul class="navbar-nav">
+                                        @foreach (var item in NavBarLinks) {
+                                            <li @onclick="() => IndexChanged(item.Key)"
+                                                class="nav-item">
+                                                <a class="@(SelectedElement == item.Key ? ClassSelected : ClassDeselected)" aria-current="page"
+                                                   href="@item.Value">
+                                                    @item.Key
+                                                </a>
+                                            </li>
+                                        }
+                                    </ul>
+                                </div>
+                                <button @onclick="Logout" class="btn btn-danger">Вийти</button>
+                            </div>
+                        </nav>
+                    }
+                    @Body
+                </div>
+            </main>
         </div>
-    </main>
-</div>
+
+    </MudMainContent>
+</MudLayout>
 
 @code {
 
@@ -52,9 +56,8 @@
     };
 
 
-
-    public void IndexChanged(string element)
-    {
+    public void IndexChanged(string element) {
         SelectedElement = element;
     }
+
 }

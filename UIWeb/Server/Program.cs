@@ -1,5 +1,8 @@
+using BusinessLogic.Services;
 using DataAccessLayer.Context;
+using DataAccessLayer.UOW;
 using Microsoft.EntityFrameworkCore;
+using MudBlazor.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +16,12 @@ builder.Services.AddDbContext<PawnshopDbContext>(opt =>
     opt.UseSqlServer(builder.Configuration.GetConnectionString("SqlServer"),
         optB =>
             optB.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)));
+
+builder.Services.AddScoped<IUow, EfUow>();
+builder.Services.AddScoped<PawnshopServices>();
+builder.Services.AddAutoMapper(typeof(BusinessLogic.Mapper.PawnshopMapper).Assembly);
+
+builder.Services.AddMudServices();
 
 var app = builder.Build();
 

@@ -1,0 +1,16 @@
+﻿<MudDialog>
+    <DialogContent>
+        Підтверджуєте свою дію?
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Ні</MudButton>
+        <MudButton Color="Color.Primary" OnClick="Submit">Так</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+
+    void Submit() => MudDialog.Close(DialogResult.Ok(true));
+    void Cancel() => MudDialog.Cancel();
+}

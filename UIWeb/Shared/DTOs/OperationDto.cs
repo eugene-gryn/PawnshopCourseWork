@@ -1,11 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace BussinessLogic.DTOs;
+namespace UIWeb.Shared.DTOs;
 
 #nullable disable
 public class OperationDto
 {
-    [Key] public int Id { get; set; }
+    public int Id { get; set; }
 
     public DateTime Created { get; set; } = DateTime.UtcNow;
     [StringLength(200)] public string Description { get; set; } = string.Empty;

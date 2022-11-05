@@ -23,18 +23,6 @@ public class IndexBase : ComponentBase {
             else
                 SuccessfulLogin = false;
         }
-
-        // TODO REMOVE TEST
-        #region TEST
-
-        var list = await Http.GetFromJsonAsync<List<Customer>>("/customers/all");
-
-        if (list != null)
-            foreach (var customer in list) {
-                Console.WriteLine($"{customer.Number}");
-            }
-
-        #endregion
     }
 
     protected override async Task<Task> OnInitializedAsync() {

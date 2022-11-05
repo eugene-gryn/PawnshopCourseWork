@@ -1,13 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using DataAccessLayer.Context;
+using DataAccessLayer.Models;
+using DataAccessLayer.Repositories.WorkersRepo;
 
-namespace DataAccessLayer.Repositories.OperationsRepo
-{
-    public class OperationsRepo
-    {
+namespace DataAccessLayer.Repositories.OperationsRepo; 
 
+public class OperationsRepo : EfRepositoryBase<Operation>, IOperationRepo {
+    public OperationsRepo(PawnshopDbContext context) : base(context) { }
+    public override Task<Operation> GetElementById(int id) {
+        throw new NotImplementedException();
     }
 }

@@ -1,11 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Data.SqlTypes;
 
-namespace BussinessLogic.DTOs;
+namespace UIWeb.Shared.DTOs;
 #nullable disable
 public class MakeDto
 {
-    [Key] public int Id { get; set; }
+    public int Id { get; set; }
 
     [Required] public string Name { get; set; }
 
@@ -21,8 +21,8 @@ public class MakeDto
     public PawnshopDto Pawnshop { get; set; }
 
     public int? WorkerId { get; set; }
-    public WorkerDto? Worker { get; set; }
+    public WorkerDto Worker { get; set; }
 
     public int? CustomerId { get; set; }
-    public CustomerDto? Customer { get; set; }
+    public CustomerDto Customer { get; set; }
 }

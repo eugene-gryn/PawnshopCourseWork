@@ -1,28 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DataAccessLayer.Context;
+﻿using DataAccessLayer.Context;
+using DataAccessLayer.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using UIWeb.Shared.SharedModels;
 
-namespace UIWeb.Server.Controllers
-{
-    [ApiController]
-    [Route("/customers/")]
-    public class CustomersController : ServerControllerBase
-    {
-        public PawnshopDbContext TestContext { get; }
+namespace UIWeb.Server.Controllers; 
 
-        public CustomersController(PawnshopDbContext testContext) {
-            TestContext = testContext;
-        }
+[ApiController]
+[Route("/[Controller]")]
+public class CustomersController : ServerControllerBase {
+    public CustomersController(PawnshopDbContext testContext) {
+        TestContext = testContext;
+    }
 
-        [HttpGet("all")]
-        public async Task<List<DataAccessLayer.Models.Customer>> GetAllCustomers() {
-            return await TestContext.Customers.ToListAsync();
-        }
+    public PawnshopDbContext TestContext { get; }
+
+    [HttpGet("/all")]
+    public async Task<List<Customer>> GetAllCustomers() {
+        return await TestContext.Customers.ToListAsync();
     }
 }

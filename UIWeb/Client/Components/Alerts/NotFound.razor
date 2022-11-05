@@ -1,0 +1,13 @@
+﻿@inherits ComponentBase
+
+<div class="alert alert-danger">
+    <h2 class="text-center">
+        @Message
+    </h2>
+</div>
+
+@code {
+
+    [Parameter] public string Message { get; set; }
+
+}

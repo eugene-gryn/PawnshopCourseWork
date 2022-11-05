@@ -1,7 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using UIWeb.Shared;
 
-namespace UIWeb.Server.Controllers; 
+namespace UIWeb.Server.Controllers;
 
-public class ServerControllerBase : ControllerBase {
-}
+public class ServerControllerBase : ControllerBase { }

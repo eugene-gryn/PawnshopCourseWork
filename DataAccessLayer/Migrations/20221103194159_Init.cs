@@ -32,12 +32,13 @@ namespace DataAccessLayer.Migrations
                     FirstName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     ThirdName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     Birthday = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Serial = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
-                    Number = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false)
+                    Serial = table.Column<string>(type: "VARCHAR(2)", maxLength: 2, nullable: true),
+                    Number = table.Column<string>(type: "VARCHAR(9)", maxLength: 9, nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Customers", x => x.Id);
+                    table.CheckConstraint("CHK_DateIsGrater18", "(DATEDIFF(year, Birthday, GETDATE()) > 17)");
                 });
 
             migrationBuilder.CreateTable(
@@ -59,7 +60,7 @@ namespace DataAccessLayer.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -72,9 +73,9 @@ namespace DataAccessLayer.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<int>(type: "int", maxLength: 50, nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     CityId = table.Column<int>(type: "int", nullable: false),
-                    Adress = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Address = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     TimeOpen = table.Column<DateTime>(type: "datetime2", nullable: false),
                     TimeClose = table.Column<DateTime>(type: "datetime2", nullable: false),
                     MoneyAvailable = table.Column<float>(type: "real", nullable: false),
@@ -106,8 +107,8 @@ namespace DataAccessLayer.Migrations
                     ThirdName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     PositionId = table.Column<int>(type: "int", nullable: false),
                     Salary = table.Column<int>(type: "int", nullable: false),
-                    Password = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
-                    Salt = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
+                    Password = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
+                    Salt = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
                     PawnshopId = table.Column<int>(type: "int", nullable: false),
                     PawnshopId1 = table.Column<int>(type: "int", nullable: true),
                     WorkerPositionId = table.Column<int>(type: "int", nullable: true)
@@ -153,8 +154,8 @@ namespace DataAccessLayer.Migrations
                     IsClosed = table.Column<bool>(type: "bit", nullable: false),
                     IsSold = table.Column<bool>(type: "bit", nullable: false),
                     PawnshopId = table.Column<int>(type: "int", nullable: false),
-                    WorkerId = table.Column<int>(type: "int", nullable: false),
-                    CustomerId = table.Column<int>(type: "int", nullable: false),
+                    WorkerId = table.Column<int>(type: "int", nullable: true),
+                    CustomerId = table.Column<int>(type: "int", nullable: true),
                     CustomerId1 = table.Column<int>(type: "int", nullable: true),
                     PawnshopId1 = table.Column<int>(type: "int", nullable: true),
                     WorkerId1 = table.Column<int>(type: "int", nullable: true)
@@ -205,7 +206,7 @@ namespace DataAccessLayer.Migrations
                     Description = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
                     Sum = table.Column<int>(type: "int", nullable: true),
                     OperationTypeId = table.Column<int>(type: "int", nullable: false),
-                    CustomerId = table.Column<int>(type: "int", nullable: false),
+                    CustomerId = table.Column<int>(type: "int", nullable: true),
                     WorkerId = table.Column<int>(type: "int", nullable: false),
                     PawnshopId = table.Column<int>(type: "int", nullable: false),
                     CustomerId1 = table.Column<int>(type: "int", nullable: true),

@@ -1,13 +1,3 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace DataAccessLayer.Repositories.OperationsRepo; 
 
-namespace DataAccessLayer.Repositories.OperationsRepo
-{
-    public interface IOperationRepo
-    {
-
-    }
-}
+public interface IOperationRepo { }

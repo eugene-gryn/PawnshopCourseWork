@@ -1,0 +1,39 @@
+﻿@using UIWeb.Shared.DTOs
+@inherits BaseTableComponent
+@inject NavigationManager Nav
+
+@if (PawnshopsList == null) {
+    <h1>Loading...</h1>
+}
+@if (PawnshopsList != null) {
+    <div class="d-flex flex-row flex-wrap justify-content-around">
+        @foreach (var pawn in PawnshopsList) {
+            <PawnshopModelComponent Model="pawn"></PawnshopModelComponent>
+        }
+    </div>
+    <div class="d-flex flex-row flex-wrap justify-content-around my-3">
+        <button @onclick="() => OnLoadMoreRequest.InvokeAsync()" 
+            class="btn btn-outline-warning m-2" type="button">
+            <span class="text-black">Завантажити ще</span>
+        </button>
+        <a @onclick="GotoAddCityPage" class="btn btn-outline-success m-2">Додати місто</a>
+        <a @onclick="GotoAddPage" class="btn btn-outline-success m-2">Додати</a>
+    </div>
+}
+
+
+@code {
+
+    [Parameter]
+    public List<PawnshopDto>? PawnshopsList { get; set; }
+
+    [Parameter]
+    public EventCallback OnLoadMoreRequest { get; set; }
+
+    public void GotoAddPage() {
+        Nav.NavigateTo("/pawnshop/0-0");
+    }
+    public void GotoAddCityPage() {
+        Nav.NavigateTo("/pawnshop/0-3");
+    }
+}

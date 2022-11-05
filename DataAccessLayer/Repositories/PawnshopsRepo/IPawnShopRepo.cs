@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using DataAccessLayer.Models;
 
-namespace DataAccessLayer.Repositories.PawnshopsRepo
-{
-    public interface IPawnShopRepo
-    {
+namespace DataAccessLayer.Repositories.PawnshopsRepo;
 
-    }
+public interface IPawnshopRepo : IRepository<Pawnshop> {
+    public Task<List<City>> GetCityAsync();
+
+    public Task<City?> GetCityById(int id);
+    public Task<City> AddCity(City city);
 }

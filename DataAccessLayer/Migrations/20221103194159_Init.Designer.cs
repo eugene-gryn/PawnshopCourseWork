@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccessLayer.Migrations
 {
     [DbContext(typeof(PawnshopDbContext))]
-    [Migration("20221031160825_CheckValueInit")]
-    partial class CheckValueInit
+    [Migration("20221103194159_Init")]
+    partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -95,7 +95,6 @@ namespace DataAccessLayer.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<int?>("CustomerId")
-                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<int?>("CustomerId1")
@@ -127,7 +126,6 @@ namespace DataAccessLayer.Migrations
                         .HasColumnType("int");
 
                     b.Property<int?>("WorkerId")
-                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<int?>("WorkerId1")
@@ -162,7 +160,6 @@ namespace DataAccessLayer.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<int?>("CustomerId")
-                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<int?>("CustomerId1")
@@ -241,7 +238,7 @@ namespace DataAccessLayer.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<string>("Adress")
+                    b.Property<string>("Address")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
@@ -255,9 +252,10 @@ namespace DataAccessLayer.Migrations
                     b.Property<float>("MoneyAvailable")
                         .HasColumnType("real");
 
-                    b.Property<int>("Name")
+                    b.Property<string>("Name")
+                        .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("int");
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<DateTime>("TimeClose")
                         .HasColumnType("datetime2");
@@ -288,7 +286,6 @@ namespace DataAccessLayer.Migrations
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<byte[]>("Password")
-                        .IsRequired()
                         .HasColumnType("varbinary(max)");
 
                     b.Property<int>("PawnshopId")
@@ -304,7 +301,6 @@ namespace DataAccessLayer.Migrations
                         .HasColumnType("int");
 
                     b.Property<byte[]>("Salt")
-                        .IsRequired()
                         .HasColumnType("varbinary(max)");
 
                     b.Property<string>("SecondName")
@@ -341,7 +337,6 @@ namespace DataAccessLayer.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
@@ -354,8 +349,7 @@ namespace DataAccessLayer.Migrations
                 {
                     b.HasOne("DataAccessLayer.Models.Customer", "Customer")
                         .WithMany()
-                        .HasForeignKey("CustomerId")
-                        .IsRequired();
+                        .HasForeignKey("CustomerId");
 
                     b.HasOne("DataAccessLayer.Models.Customer", null)
                         .WithMany("Makes")
@@ -373,8 +367,7 @@ namespace DataAccessLayer.Migrations
 
                     b.HasOne("DataAccessLayer.Models.Worker", "Worker")
                         .WithMany()
-                        .HasForeignKey("WorkerId")
-                        .IsRequired();
+                        .HasForeignKey("WorkerId");
 
                     b.HasOne("DataAccessLayer.Models.Worker", null)
                         .WithMany("Mades")
@@ -391,8 +384,7 @@ namespace DataAccessLayer.Migrations
                 {
                     b.HasOne("DataAccessLayer.Models.Customer", "Customer")
                         .WithMany()
-                        .HasForeignKey("CustomerId")
-                        .IsRequired();
+                        .HasForeignKey("CustomerId");
 
                     b.HasOne("DataAccessLayer.Models.Customer", null)
                         .WithMany("Operations")
