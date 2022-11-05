@@ -52,4 +52,20 @@ public class PawnshopServices : BaseService {
 
         return res!;
     }
+
+    public async Task<bool> Delete(int id) {
+        var res = await Uow.Pawnshops.Delete(id);
+
+        if (res) await Uow.SaveAsync();
+
+        return res;
+    }
+
+    public async Task<List<PawnshopDto>> SearchBy(string attribute, string query, int limit, int offset) {
+        return Mapper.Map<List<PawnshopDto>>(await Uow.Pawnshops.SearchByAttribute(attribute, query, limit, offset));
+    }
+    public async Task<List<PawnshopDto>> SortBy(string attribute, int limit, int offset) {
+        return Mapper.Map<List<PawnshopDto>>(await Uow.Pawnshops.SortByAttribute(attribute, limit, offset));
+    }
+
 }

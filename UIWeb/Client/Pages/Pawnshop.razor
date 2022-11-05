@@ -34,9 +34,9 @@
     #region SearchEngineRegion
 
     private readonly List<string> _testSearchPrinciples = new() {
-        "за розміром",
         "за назвою",
-        "за описом"
+        "за адресою",
+        "за кількістю грошей"
     };
 
     private int _selectedIndexSearch;
@@ -46,8 +46,10 @@
         Console.WriteLine(_testSearchPrinciples[_selectedIndexSearch]);
     }
 
-    private void OnSearchingChangedQuery(string? query) {
+    private async Task OnSearchingChangedQuery(string? query) {
         Console.WriteLine($"{_testSearchPrinciples[_selectedIndexSearch]}: {query}");
+
+        if (query != null) await Search(_selectedIndexSort, query);
     }
 
     #endregion
@@ -56,17 +58,17 @@
     #region SortingRegion
 
     private readonly List<string> _testSortingAttributes = new() {
-        "По імені",
-        "По ціні",
         "По назві",
-        "По якості"
+        "По адресі",
+        "По кількості грошей"
     };
 
     private int _selectedIndexSort;
 
-    private void OnSortingIndexChanged(int obj) {
+    private async Task OnSortingIndexChanged(int obj) {
         _selectedIndexSort = obj;
-        Console.WriteLine($"Sorting by {_testSortingAttributes[_selectedIndexSort]}");
+
+        await Sort(_selectedIndexSort);
     }
 
     #endregion

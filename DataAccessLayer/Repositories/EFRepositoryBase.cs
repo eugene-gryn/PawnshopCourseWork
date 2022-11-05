@@ -17,15 +17,23 @@ public abstract class EfRepositoryBase<T>: IRepository<T> where T : class {
         return await Context.Set<T>().Skip(offset).Take(limit).ToListAsync();
     }
 
-    public virtual int Count() {
-        return Context.Set<T>().Count();
-    }
-
     public virtual T Update(T entity) {
         throw new NotImplementedException();
     }
 
     public virtual Task<T> Add(T entity) {
+        throw new NotImplementedException();
+    }
+
+    public virtual Task<bool> Delete(int id) {
+        throw new NotImplementedException();
+    }
+
+    public virtual async Task<List<T>> SearchByAttribute(string attribute, string query, int limit, int offset) {
+        throw new NotImplementedException();
+    }
+
+    public virtual async Task<List<T>> SortByAttribute(string attribute, int limit, int offset) {
         throw new NotImplementedException();
     }
 

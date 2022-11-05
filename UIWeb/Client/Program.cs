@@ -17,6 +17,6 @@ builder.Services.AddBlazoredLocalStorage();
 
 
 builder.Services.AddScoped<AuthorizeService>();
-builder.Services.AddScoped<EntitiesService>();
+builder.Services.AddScoped<ApiClientService>();
 
 await builder.Build().RunAsync();

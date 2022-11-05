@@ -49,4 +49,21 @@ public class PawnshopsController : ServerControllerBase {
     public async Task<CityDto?> GetCityById(int id) {
         return await PawnS.GetCity(id);
     }
+
+    [HttpDelete(ControllerBaseRoute + "/{id}")]
+    public async Task<bool> PawnshopRemove(int id) {
+        return await PawnS.Delete(id);
+    }
+
+    [HttpGet(ControllerBaseRoute + "/search")]
+    public async Task<List<PawnshopDto>> PawnshopSearchByAttribute([FromQuery] string attribute,
+        [FromQuery] string query, [FromQuery] int limit, [FromQuery] int offset) {
+        return await PawnS.SearchBy(attribute, query, limit, offset);
+    }
+
+    [HttpGet(ControllerBaseRoute + "/sort")]
+    public async Task<List<PawnshopDto>> PawnshopSortByAttribute([FromQuery] string attribute, [FromQuery] int limit,
+        [FromQuery] int offset) {
+        return await PawnS.SortBy(attribute, limit, offset);
+    }
 }

@@ -3,10 +3,10 @@ using UIWeb.Shared.DTOs;
 
 namespace UIWeb.Client.Services;
 
-public class EntitiesService {
+public class ApiClientService {
     private readonly string _pawnshopPrefix = "/api/pawnshops";
 
-    public EntitiesService(HttpClient Http) {
+    public ApiClientService(HttpClient Http) {
         this.Http = Http;
     }
 
@@ -38,5 +38,28 @@ public class EntitiesService {
 
     public async Task<CityDto?> GetCityById(int id) {
         return await Http.GetFromJsonAsync<CityDto?>($"{_pawnshopPrefix}/cities/{id}");
+    }
+
+    public async Task<bool> PawnshopDelete(int id) {
+        var res = await Http.DeleteAsync($"{_pawnshopPrefix}/{id}");
+
+        return res.IsSuccessStatusCode;
+    }
+
+    public async Task<bool> Pa(int id) {
+        var res = await Http.DeleteAsync($"{_pawnshopPrefix}/{id}");
+
+        return res.IsSuccessStatusCode;
+    }
+
+    public async Task<List<PawnshopDto>> PawnshopSearchByAttribute(string attribute, string query, int limit,
+        int offset) {
+        return (await Http.GetFromJsonAsync<List<PawnshopDto>>(
+            $"{_pawnshopPrefix}/search?attribute={attribute}&limit={limit}&offset={offset}&query={query}"))!;
+    }
+
+    public async Task<List<PawnshopDto>> PawnshopSortByAttribute(string attribute, int limit, int offset) {
+        return (await Http.GetFromJsonAsync<List<PawnshopDto>>(
+            $"{_pawnshopPrefix}/sort?attribute={attribute}&limit={limit}&offset={offset}"))!;
     }
 }

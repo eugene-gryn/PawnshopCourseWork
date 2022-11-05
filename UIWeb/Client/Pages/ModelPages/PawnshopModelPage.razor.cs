@@ -77,7 +77,7 @@ public class PawnshopModelPageBase : PawnshopBaseComponent {
                 
                 Model = model;
 
-                City = ((await Server.GetCityById(ModelId))!);
+                City = ((await Server.GetCityById(Model.CityId))!);
             }
             else {
                 Model = new PawnshopDto();
@@ -120,10 +120,11 @@ public class PawnshopModelPageBase : PawnshopBaseComponent {
         AuthorizeS.Navigation.NavigateTo(AuthorizeS.Navigation.BaseUri);
     }
 
-    public Task DeleteModel() {
+    public async Task DeleteModel() {
         Console.WriteLine("Deleting....");
 
+        await Server.PawnshopDelete(ModelId);
+
         AuthorizeS.Navigation.NavigateTo(AuthorizeS.BasePage);
-        return Task.CompletedTask;
     }
 }
