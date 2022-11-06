@@ -40,7 +40,7 @@ public class WorkersRepo : EfRepositoryBase<Worker>, IWorkersRepo {
     }
 
     public override Worker Update(Worker entity) {
-        var elem = Context.Workers.Single(w => w.Id == entity.Id);
+        var elem = Context.Workers.AsNoTracking().Single(w => w.Id == entity.Id);
 
         entity.Password = elem.Password;
         entity.Salt = elem.Salt;

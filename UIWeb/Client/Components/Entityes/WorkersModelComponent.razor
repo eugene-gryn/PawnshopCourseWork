@@ -1,6 +1,5 @@
 ﻿@using UIWeb.Client.Services
 @using UIWeb.Shared.DTOs
-@using UIWeb.Client.Components.Alerts
 @inherits ComponentBase
 @inject ApiClientService Server
 @inject IDialogService DialogService
@@ -8,7 +7,7 @@
 
 <div class="container">
     @if (Workers == null) {
-        <Loading />
+        <Loading/>
     }
     @if (Workers != null) {
         <div class="m-3">
@@ -30,6 +29,12 @@
                       ApplyButtonPosition="@TableApplyButtonPosition.End">
                 <ToolBarContent>
                     <MudText Typo="Typo.h6">@Text</MudText>
+                    @if (!Dependent) {
+                        <MudButton OnClick="LoadMoreToTable"
+                            ButtonType="ButtonType.Button" Variant="Variant.Filled"
+                            EndIcon="@Icons.Material.Filled.Add" Color="Color.Success" Class="mx-2">Завантажити ще</MudButton>
+                    }
+
                     <MudSpacer/>
                     @if (!Dependent) {
                         <MudTextField @bind-Value="searchString" TextChanged="QueryTextChanged" Placeholder="Пошук за іменем" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
@@ -158,6 +163,7 @@
 
     [Parameter]
     public bool Dependent { get; set; }
+
     [Parameter]
     public string Text { get; set; }
 
@@ -183,7 +189,7 @@
     }
 
     private void CommitEdit() {
-        PositionSelected = Positions.First();
+        if (Positions != null) PositionSelected = Positions.First();
     }
 
     private void BackupItem(object obj) {
@@ -210,7 +216,10 @@
     }
 
     private async Task ItemHasBeenCommitted(object obj) {
-        if (obj is WorkerDto el) await Server.WorkerUpdate(el);
+        if (obj is WorkerDto el) {
+            el.PositionId = PositionSelected.Id;
+            await Server.WorkerUpdate(el);
+        }
     }
 
     #endregion
@@ -223,6 +232,12 @@
     private async Task QueryTextChanged() {
         if (string.IsNullOrEmpty(searchString)) Workers = await Server.WorkerGetAll(Limit, 0, "");
         else if (searchString != null) Workers = await Server.WorkerSearchByAttribute("Name", searchString, Limit, 0);
+    }
+
+    private async Task LoadMoreToTable() {
+        Limit += 10;
+
+        Workers = await Server.WorkerGetAll(Limit, 0, "");
     }
 
     private string? searchString;
@@ -260,6 +275,8 @@
     }
 
     #endregion
+
+
 
 
 }
