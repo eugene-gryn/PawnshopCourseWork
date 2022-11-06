@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using DataAccessLayer.Models;
 
-namespace DataAccessLayer.Repositories.WorkersRepo
-{
-    public interface IWorkersRepo
-    {
+namespace DataAccessLayer.Repositories.WorkersRepo;
 
-    }
+public interface IWorkersRepo : IRepository<Worker> {
+    public Task<WorkerPosition> AddPosition(WorkerPosition workerPosition);
+    public Task<List<WorkerPosition>> GetPositions();
+    public Task<WorkerPosition?> GetPosition(int id);
+
 }

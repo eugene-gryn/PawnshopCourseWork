@@ -6,6 +6,8 @@ namespace DataAccessLayer.Repositories;
 public interface IRepository<T> {
 
     public Task<T?> GetElementById(int id);
+    public Task<T?> GetElementById(int id, string[] related);
+    public Task<List<T>> GetAll(int limit, int offset, string[] related);
     public Task<List<T>> GetAll(int limit, int offset);
     public T Update(T entity);
     public Task<T> Add(T entity);

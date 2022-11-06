@@ -30,4 +30,12 @@ public class PawnshopDto {
     public ICollection<OperationDto> Operations { get; set; } = new List<OperationDto>();
     public ICollection<WorkerDto> Workers { get; set; } = new List<WorkerDto>();
     public ICollection<MakeDto> Makes { get; set; } = new List<MakeDto>();
+
+    public override string ToString() {
+        return $"{Name}";
+    }
+
+    public override int GetHashCode() {
+        return Id.GetHashCode();
+    }
 }

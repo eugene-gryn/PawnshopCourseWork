@@ -19,6 +19,10 @@ builder.Services.AddDbContext<PawnshopDbContext>(opt =>
 
 builder.Services.AddScoped<IUow, EfUow>();
 builder.Services.AddScoped<PawnshopServices>();
+builder.Services.AddScoped<OperationService>();
+builder.Services.AddScoped<CustomerService>();
+builder.Services.AddScoped<MakeService>();
+builder.Services.AddScoped<WorkerService>();
 builder.Services.AddAutoMapper(typeof(BusinessLogic.Mapper.PawnshopMapper).Assembly);
 
 builder.Services.AddMudServices();

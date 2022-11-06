@@ -1,6 +1,4 @@
-﻿using System.Globalization;
-using System.Runtime.InteropServices;
-using DataAccessLayer.Context;
+﻿using DataAccessLayer.Context;
 using DataAccessLayer.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,6 +9,25 @@ public class PawnshopRepo : EfRepositoryBase<Pawnshop>, IPawnshopRepo {
 
     public override Pawnshop Update(Pawnshop entity) {
         return Context.Update(entity).Entity;
+    }
+
+    public override async Task<Pawnshop?> GetElementById(int id, string[] related) {
+        throw new NotImplementedException();
+    }
+
+    public override async Task<List<Pawnshop>> GetAll(int limit, int offset, string[] related) {
+        var queryable = Context.Pawnshops
+            .Skip(offset)
+            .Take(limit);
+
+        foreach (var rel in related)
+            if (rel == "Operations")
+                queryable = queryable.Include(p => p.Operations);
+            else if (rel == "Workers")
+                queryable = queryable.Include(p => p.Workers);
+            else if (rel == "Makes") queryable = queryable.Include(p => p.Makes);
+
+        return await queryable.ToListAsync();
     }
 
     public async Task<List<City>> GetCityAsync() {
@@ -73,7 +90,7 @@ public class PawnshopRepo : EfRepositoryBase<Pawnshop>, IPawnshopRepo {
                     .ToListAsync();
             }
             case "MoneyAvailable": {
-                float queryInt = float.Parse(query);
+                var queryInt = float.Parse(query);
                 return await Context.Pawnshops
                     .Where(p => Math.Abs(p.MoneyAvailable - queryInt) < 2)
                     .Skip(offset)
@@ -126,5 +143,9 @@ public class PawnshopRepo : EfRepositoryBase<Pawnshop>, IPawnshopRepo {
             default:
                 return new List<Pawnshop>();
         }
+    }
+
+    protected override IQueryable<Pawnshop> ProcessingRelated(IQueryable<Pawnshop> filtered, string[] relations) {
+        throw new NotImplementedException();
     }
 }

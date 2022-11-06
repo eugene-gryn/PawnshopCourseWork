@@ -9,7 +9,7 @@
 
 
 @if (WrongPage.HasValue && WrongPage.Value) {
-    <NotFound Message="Ломбард не знайдено"></NotFound>
+    <NotFoundAlert Message="Ломбард не знайдено"></NotFoundAlert>
 }
 @if (WrongPage.HasValue && !WrongPage.Value) {
 
@@ -78,6 +78,7 @@
             </div>
 
             <h1>TODO Dependencies</h1>
+
         </div>
     }
     @if (State == PageStates.CityAdd) {
@@ -150,7 +151,7 @@
     }
 
     public async Task DeleteDialog() {
-        var options = new DialogOptions { CloseOnEscapeKey = true };
+        var options = new MudBlazor.DialogOptions { CloseOnEscapeKey = true };
 
         var elem = DialogService.Show<YesNoDialogComponent>("Видалення елемента", options);
 

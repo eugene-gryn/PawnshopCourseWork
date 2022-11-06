@@ -1,3 +1,9 @@
-﻿namespace DataAccessLayer.Repositories.OperationsRepo; 
+﻿using DataAccessLayer.Models;
 
-public interface IOperationRepo { }
+namespace DataAccessLayer.Repositories.OperationsRepo;
+
+public interface IOperationRepo : IRepository<Operation> {
+    public Task<OperationType> AddOperationType (OperationType operationType);
+    public Task<List<OperationType>> GetOperationTypeList ();
+    public Task<OperationType?> GetOperationType(int id);
+}

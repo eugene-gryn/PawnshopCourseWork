@@ -1,2 +1,24 @@
-﻿@inherits WorkersBase
+﻿@using UIWeb.Shared.DTOs
+@inherits WorkersBase
 @page "/workers"
+
+<PageTitle>Робітники - загальна таблиця</PageTitle>
+
+
+<WorkersModelComponent 
+    Workers="_workers" 
+    Dependent="false" 
+    UpdateTable="OnInitializedAsync"
+    Text="Робітники - загальна таблиця"></WorkersModelComponent>
+
+@code {
+
+    List<WorkerDto>? _workers;
+    List<WorkerPositionDto>? _positions;
+
+    protected override async Task<Task> OnInitializedAsync() {
+        _workers = await Server.WorkerGetAll(20, 0, "");
+
+        return Task.CompletedTask;
+    }
+}
