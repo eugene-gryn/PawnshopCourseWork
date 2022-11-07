@@ -9,7 +9,11 @@ public class OperationService : BaseService {
     public OperationService(IMapper mapper, IUow uow) : base(mapper, uow) { }
 
     public async Task<OperationTypeDto> AddOperationType(OperationTypeDto operationType) {
-        return Mapper.Map<OperationTypeDto>(await Uow.Operations.AddOperationType(Mapper.Map<OperationType>(operationType)));
+        var res = Mapper.Map<OperationTypeDto>(await Uow.Operations.AddOperationType(Mapper.Map<OperationType>(operationType)));
+
+        await Uow.SaveAsync();
+
+        return res;
     }
 
     public async Task<List<OperationTypeDto>> GetOperationTypeList() {

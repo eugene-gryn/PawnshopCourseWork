@@ -9,9 +9,13 @@ public class WorkerService : BaseService {
     public WorkerService(IMapper mapper, IUow uow) : base(mapper, uow) { }
 
     public async Task<WorkerPositionDto> AddPosition(WorkerPositionDto workerPosition) {
-        return Mapper.Map<WorkerPositionDto>(
+        var res = Mapper.Map<WorkerPositionDto>(
             await Uow.Workers.AddPosition(
                 Mapper.Map<WorkerPosition>(workerPosition)));
+
+        await Uow.SaveAsync();
+
+        return res;
     }
 
     public async Task<List<WorkerPositionDto>> GetPositions() {
@@ -22,7 +26,7 @@ public class WorkerService : BaseService {
         return Mapper.Map<WorkerPositionDto>(await Uow.Workers.GetPosition(id));
     }
 
-    public WorkerDto Update(WorkerDto entity) {
+    public async Task<WorkerDto> Update(WorkerDto entity) {
         var val = Mapper.Map<WorkerDto>(Uow.Workers.Update(
             Mapper.Map<Worker>(entity)));
 
