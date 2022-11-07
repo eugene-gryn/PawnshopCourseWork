@@ -17,8 +17,8 @@ public class ApiClientService {
 
     public HttpClient Http { get; }
 
-    public async Task<List<PawnshopDto>?> PawnshopList(int l, int o) {
-        return await Http.GetFromJsonAsync<List<PawnshopDto>>($"{PawnshopPrefix}?l={l}&o={o}");
+    public async Task<List<PawnshopDto>?> PawnshopList(int l, int o, string r = "") {
+        return await Http.GetFromJsonAsync<List<PawnshopDto>>($"{PawnshopPrefix}?l={l}&o={o}&r={r}");
     }
 
     public async Task<PawnshopDto?> PawnshopById(int id) {
@@ -217,7 +217,7 @@ public class ApiClientService {
         return await res.Content.ReadFromJsonAsync<bool>();
     }
 
-    public async Task<List<WorkerDto>?> WorkerSearchByAttribute(string attribute, string query,
+    public async Task<List<WorkerDto>?> WorkerSearchByAttribute(string attribute, string? query,
         int limit, int offset)
     {
         return await Http.GetFromJsonAsync<List<WorkerDto>>(

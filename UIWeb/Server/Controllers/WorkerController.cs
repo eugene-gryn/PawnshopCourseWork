@@ -37,6 +37,9 @@ public class WorkerController : ServerControllerBase {
 
     [HttpPost]
     public async Task<WorkerDto> Add(WorkerDto entity) {
+        entity.Pawnshop = null;
+        entity.Position = null;
+
         return await WorkerService.Add(entity);
     }
 

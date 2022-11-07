@@ -16,8 +16,9 @@ public class PawnshopsController : ServerControllerBase {
     public PawnshopServices PawnS { get; }
 
     [HttpGet]
-    public async Task<List<PawnshopDto>> PawnshopGetList([FromQuery] int l, [FromQuery] int o) {
-        return await PawnS.GetPawnsList(l, o);
+    public async Task<List<PawnshopDto>> PawnshopGetList([FromQuery] int l, [FromQuery] int o, [FromQuery]string? r) {
+        r ??= String.Empty;
+        return await PawnS.GetPawnsList(l, o, r);
     }
 
     [HttpGet(ControllerBaseRoute + "/{id}")]

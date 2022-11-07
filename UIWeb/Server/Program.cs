@@ -25,6 +25,9 @@ builder.Services.AddScoped<MakeService>();
 builder.Services.AddScoped<WorkerService>();
 builder.Services.AddAutoMapper(typeof(BusinessLogic.Mapper.PawnshopMapper).Assembly);
 
+builder.Services.AddControllers().AddNewtonsoftJson(x =>
+    x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+
 builder.Services.AddMudServices();
 
 var app = builder.Build();

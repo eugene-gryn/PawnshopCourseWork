@@ -8,8 +8,8 @@ namespace BusinessLogic.Services;
 public class PawnshopServices : BaseService {
     public PawnshopServices(IMapper mapper, IUow uow) : base(mapper, uow) { }
 
-    public async Task<List<PawnshopDto>> GetPawnsList(int limit, int offset) {
-        return Mapper.Map<List<PawnshopDto>>(await Uow.Pawnshops.GetAll(limit, offset));
+    public async Task<List<PawnshopDto>> GetPawnsList(int limit, int offset, string related) {
+        return Mapper.Map<List<PawnshopDto>>(await Uow.Pawnshops.GetAll(limit, offset, related.Split(',')));
     }
 
     public async Task<PawnshopDto?> GetPawnById(int id) {

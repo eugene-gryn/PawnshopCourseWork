@@ -20,11 +20,20 @@ public class WorkersRepo : EfRepositoryBase<Worker>, IWorkersRepo {
     }
 
     public override async Task<List<Worker>> GetAll(int limit, int offset, string[] related) {
-        var query = Context.Workers.Skip(offset).Take(limit);
+        var query = Context.Workers.AsQueryable();
 
-        query = ProcessingRelated(query, related);
+        query = ProcessingRelated(query, related).AsNoTracking();
 
-        return await query.ToListAsync();
+        var list = await query
+            .Skip(offset)
+            .Take(limit)
+            .ToListAsync();
+
+        foreach (var worker in list) {
+            if(worker.Position != null) worker.Position.Workers.Clear();
+        }
+
+        return list;
     }
 
     protected override IQueryable<Worker> ProcessingRelated(IQueryable<Worker> filtered, string[] relations) {
@@ -33,9 +42,9 @@ public class WorkersRepo : EfRepositoryBase<Worker>, IWorkersRepo {
                 filtered = filtered.Include(w => w.Operations);
             else if (rel == "Mades")
                 filtered = filtered.Include(w => w.Mades);
-            else if (rel == "Pawnshop")
-                filtered = filtered.Include(w => w.Position);
             else if (rel == "Position")
+                filtered = filtered.Include(w => w.Position);
+            else if (rel == "Pawnshop")
                 filtered = filtered.Include(w => w.Pawnshop);
         }
 

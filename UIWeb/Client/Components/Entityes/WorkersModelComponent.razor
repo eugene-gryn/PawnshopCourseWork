@@ -235,19 +235,22 @@
 
     int Limit = 10;
 
-    private async Task SearchByQueryWorkers(string attribute, string query) {
-        if (string.IsNullOrEmpty(searchStringName)) 
+    private async Task SearchByQueryWorkers(string attribute, string? query) {
+        if (string.IsNullOrEmpty(query))
+        {
             Workers = await Server.WorkerGetAll(Limit, 0, "Pawnshop,Position");
-        else if (searchStringName != null) 
-            Workers = await Server.WorkerSearchByAttribute(attribute, query, Limit, 0);
+            return;
+        }
+
+        Workers = await Server.WorkerSearchByAttribute(attribute, query, Limit, 0);
+
     }
 
     private async Task QueryTextChangedName() {
-        await SearchByQueryWorkers("Name", searchStringName);
+        if (searchStringName != null) await SearchByQueryWorkers("Name", searchStringName);
     }
     private async Task QueryTextChangedPosition() {
-        await SearchByQueryWorkers("Position", searchStringPosition);
-
+        if (searchStringPosition != null) await SearchByQueryWorkers("Position", searchStringPosition);
     }
 
     private async Task LoadMoreToTable() {
@@ -269,7 +272,7 @@
 
     private bool _modeCreationPosition = false;
 
-    private string _positionTextName;
+    private string? _positionTextName;
 
     private async Task OnCreatePositionButtonClick() {
         Console.WriteLine($"Create position {_positionTextName}");
@@ -289,7 +292,7 @@
 
     private async Task<IEnumerable<PawnshopDto>> OnPawnshopSelectQueryChangedFunc(string s) {
         if (string.IsNullOrEmpty(s)) {
-            var list = await Server.PawnshopList(10, 0);
+            var list = await Server.PawnshopList(10, 0, "City");
             if (list != null) return list;
         }
 
@@ -308,7 +311,10 @@
 
         await Server.WorkerAdd(CreateModel);
 
-        CreateModel = new WorkerDto();
+        CreateModel = new WorkerDto() {
+            Position = CreateModel.Position,
+            Pawnshop = CreateModel.Pawnshop
+        };
 
         Workers = await Server.WorkerGetAll(Limit, 0, "");
     }

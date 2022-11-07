@@ -26,6 +26,7 @@ public class PawnshopRepo : EfRepositoryBase<Pawnshop>, IPawnshopRepo {
             else if (rel == "Workers")
                 queryable = queryable.Include(p => p.Workers);
             else if (rel == "Makes") queryable = queryable.Include(p => p.Makes);
+            else if (rel == "City") queryable = queryable.Include(p => p.City);
 
         return await queryable.ToListAsync();
     }
