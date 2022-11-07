@@ -13,6 +13,7 @@ public class Worker {
     [StringLength(50)] public string? ThirdName { get; set; }
 
     [Required] public int PositionId { get; set; }
+    [Required] public WorkerPosition Position { get; set; }
 
     [Required] public int Salary { get; set; }
 
@@ -21,7 +22,7 @@ public class Worker {
     [MinLength(512)] public byte[] Salt { get; set; }
 
     [Required] public int PawnshopId { get; set; }
-    public Pawnshop Pawnshop { get; set; }
+    [Required] public Pawnshop Pawnshop { get; set; }
 
     public ICollection<Operation> Operations { get; set; } = new List<Operation>();
     public ICollection<Make> Mades { get; set; } = new List<Make>();

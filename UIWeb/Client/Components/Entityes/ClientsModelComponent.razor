@@ -1,0 +1,306 @@
+﻿@using UIWeb.Client.Services
+@using UIWeb.Shared.DTOs
+@inherits ComponentBase
+@inject ApiClientService Server
+@inject IDialogService DialogService
+
+
+<div class="container">
+    @if (Workers == null)
+    {
+        <Loading />
+    }
+    @if (Workers != null)
+    {
+        <div class="m-3">
+            <MudTable Items="@Workers"
+                  Dense="false"
+                  Hover="true"
+                  ReadOnly="false"
+                  CanCancelEdit="true"
+                  Filter="new Func<WorkerDto, bool>(FilterFunc)"
+                  @bind-SelectedItem="SelectedItem"
+                  SortLabel="Сортувати за.."
+                  CommitEditTooltip="Зберегти"
+                  CancelEditTooltip="Видалити"
+                  OnCommitEditClick="@(CommitEdit)"
+                  RowEditPreview="BackupItem"
+                  RowEditCancel="async obj => await RemoveOrResetValue(obj)"
+                  RowEditCommit="async args => await ItemHasBeenCommitted(args)"
+                  IsEditRowSwitchingBlocked="true"
+                  ApplyButtonPosition="@TableApplyButtonPosition.End">
+                <ToolBarContent>
+                    <MudText Typo="Typo.h6">@Text</MudText>
+                    @if (!Dependent)
+                    {
+                        <MudButton OnClick="LoadMoreToTable"
+                           ButtonType="ButtonType.Button" Variant="Variant.Filled"
+                           EndIcon="@Icons.Material.Filled.Add" Color="Color.Success" Class="mx-2">Завантажити ще</MudButton>
+                    }
+
+                    <MudSpacer />
+                    @if (!Dependent)
+                    {
+                        <MudTextField @bind-Value="searchString" TextChanged="QueryTextChanged" Placeholder="Пошук за іменем" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+                    }
+                </ToolBarContent>
+                <ColGroup>
+                    <col style="width: 25%;" />
+                    <col style="width: 25%;" />
+                    <col style="width: 25%;" />
+                    <col style="width: 15%;" />
+                    <col style="width: 10%;" />
+                </ColGroup>
+                <HeaderContent>
+                    <MudTh>
+                        <MudTableSortLabel SortBy="new Func<WorkerDto, object>(x => x.FirstName)">Ім'я</MudTableSortLabel>
+                    </MudTh>
+                    <MudTh>
+                        <MudTableSortLabel SortBy="new Func<WorkerDto, object>(x => x.SecondName)">Прізвище</MudTableSortLabel>
+                    </MudTh>
+                    <MudTh>
+                        <MudTableSortLabel SortBy="new Func<WorkerDto, object>(x => x.ThirdName)">По-Батькові</MudTableSortLabel>
+                    </MudTh>
+                    <MudTh>
+                        <MudTableSortLabel SortBy="new Func<WorkerDto, object>(x => x.PositionId)">Позиція</MudTableSortLabel>
+                    </MudTh>
+                    <MudTh>
+                        <MudTableSortLabel SortBy="new Func<WorkerDto, object>(x => x.Salary)">Заробітна плата</MudTableSortLabel>
+                    </MudTh>
+                </HeaderContent>
+                <RowTemplate>
+                    <MudTd DataLabel="Ім'я'">@context.FirstName</MudTd>
+                    <MudTd DataLabel="Прізвище">@context.SecondName</MudTd>
+                    <MudTd DataLabel="По-Батькові">@context.ThirdName</MudTd>
+                    <MudTd DataLabel="Позиція">
+                        @if (Positions != null)
+                        {
+                            @Positions.First(p => context.PositionId == p.Id).Name
+                        }
+                    </MudTd>
+                    <MudTd DataLabel="Заробітна плата">@context.Salary</MudTd>
+                </RowTemplate>
+                <RowEditingTemplate>
+                    <MudTd DataLabel="Ім'я">
+                        <MudTextField @bind-Value="@context.FirstName" Required />
+                    </MudTd>
+                    <MudTd DataLabel="Прізвище">
+                        <MudTextField @bind-Value="@context.SecondName" Required />
+                    </MudTd>
+                    <MudTd DataLabel="По-Батькові">
+                        <MudTextField @bind-Value="@context.ThirdName" Required />
+                    </MudTd>
+                    <MudTd DataLabel="Позиція">
+                        <MudSelect @bind-Value="@PositionSelected" T="WorkerPositionDto" Label="Позиція" Variant="Variant.Filled" AnchorOrigin="Origin.BottomCenter">
+                            @if (Positions != null)
+                            {
+                                foreach (var position in Positions)
+                                {
+                                    <MudSelectItem Value="@position" />
+                                }
+                            }
+                        </MudSelect>
+                    </MudTd>
+                    <MudTd DataLabel="Заробітна плата">
+                        <MudNumericField @bind-Value="@context.Salary" Required Min="1" />
+                    </MudTd>
+                </RowEditingTemplate>
+                <PagerContent>
+                    <MudTablePager />
+                </PagerContent>
+            </MudTable>
+            @if (!Dependent)
+            {
+                <div class="mt-4 p-2 border-2 border-dark rounded">
+                    <MudText Typo="Typo.h6">Створення нового робітника:</MudText>
+                    <EditForm OnValidSubmit="CreateNewModel" Model="@CreateModel">
+                        <DataAnnotationsValidator />
+                        <ValidationSummary />
+
+                        <MudTextField class="mb-2" Label="*Ім'я'" @bind-Value="CreateModel.FirstName" Variant="Variant.Filled" />
+                        <MudTextField class="mb-2" Label="*Прізвище" @bind-Value="CreateModel.SecondName" Variant="Variant.Filled" />
+                        <MudTextField class="mb-2" Label="*По-Батькові" @bind-Value="CreateModel.ThirdName" Variant="Variant.Filled" />
+                        <MudNumericField @bind-Value="CreateModel.Salary" Label="Заробітна плата" Variant="Variant.Filled" Min="0" Max="800000" />
+
+                        <hr />
+
+                        <MudSelect @bind-Value="@_createPositionSelected" T="WorkerPositionDto" Label="Позиція" Variant="Variant.Filled" AnchorOrigin="Origin.BottomCenter">
+                            @if (Positions != null)
+                            {
+                                foreach (var position in Positions)
+                                {
+                                    <MudSelectItem Value="@position" />
+                                }
+                            }
+                        </MudSelect>
+
+                        <hr />
+
+                        <div class="my-2">
+                            <MudTextField TextChanged="OnQueryChangedCreateWorker" Label="*Ломбард" @bind-Value="_queryBindPawnshop" Variant="Variant.Filled" />
+                            <MudSelect @bind-Value="@_createPawnshopSelected" T="PawnshopDto" Label="Позиція"
+                               Variant="Variant.Filled" AnchorOrigin="Origin.BottomCenter">
+                                @if (_pawnshopCreationList != null)
+                                {
+                                    foreach (var pawnshopDto in _pawnshopCreationList)
+                                    {
+                                        <MudSelectItem Value="@pawnshopDto" />
+                                    }
+                                }
+                            </MudSelect>
+                        </div>
+
+                        <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.Add" Color="Color.Success" Class="mt-3">Створити</MudButton>
+                    </EditForm>
+
+
+                </div>
+            }
+
+        </div>
+    }
+
+</div>
+
+@code {
+
+    protected override async Task<Task> OnParametersSetAsync()
+    {
+        Positions = await Server.GetWorkerPositions();
+
+        _pawnshopCreationList = await Server.PawnshopList(10, 0);
+
+
+        return base.OnParametersSetAsync();
+    }
+
+    [Parameter]
+    public bool Dependent { get; set; }
+
+    [Parameter]
+    public string Text { get; set; }
+
+
+    #region Table
+
+    WorkerDto SelectedItem;
+    WorkerPositionDto PositionSelected;
+
+    [Parameter]
+    public List<WorkerDto>? Workers { get; set; }
+
+    [Parameter]
+    public EventCallback UpdateTable { get; set; }
+
+
+    public List<WorkerPositionDto>? Positions { get; set; }
+
+
+    private bool FilterFunc(WorkerDto arg)
+    {
+        Console.WriteLine($"FilterFunc - {arg.FirstName}");
+        return true;
+    }
+
+    private void CommitEdit()
+    {
+        if (Positions != null) PositionSelected = Positions.First();
+    }
+
+    private void BackupItem(object obj)
+    {
+        SelectedItem = new WorkerDto(obj as WorkerDto);
+    }
+
+    private async Task RemoveOrResetValue(object obj)
+    {
+        var el = obj as WorkerDto;
+
+        if (el != null)
+        {
+            el.Restore(SelectedItem);
+
+            var options = new DialogOptions { CloseOnEscapeKey = true };
+
+            var res = DialogService.Show<YesNoDialogComponent>($"Видалення користувача {el.FirstName}?", options);
+
+            var result = await res.Result;
+
+            if (!result.Cancelled)
+            {
+                await Server.WorkerDelete(el.Id);
+                await UpdateTable.InvokeAsync();
+            }
+        }
+    }
+
+    private async Task ItemHasBeenCommitted(object obj)
+    {
+        if (obj is WorkerDto el)
+        {
+            el.PositionId = PositionSelected.Id;
+            await Server.WorkerUpdate(el);
+        }
+    }
+
+    #endregion
+
+
+    #region Dependent
+
+    int Limit = 10;
+
+    private async Task QueryTextChanged()
+    {
+        if (string.IsNullOrEmpty(searchString)) Workers = await Server.WorkerGetAll(Limit, 0, "");
+        else if (searchString != null) Workers = await Server.WorkerSearchByAttribute("Name", searchString, Limit, 0);
+    }
+
+    private async Task LoadMoreToTable()
+    {
+        Limit += 10;
+
+        Workers = await Server.WorkerGetAll(Limit, 0, "");
+    }
+
+    private string? searchString;
+
+    #endregion
+
+
+    #region Creation
+
+    WorkerDto CreateModel = new();
+    WorkerPositionDto _createPositionSelected;
+    PawnshopDto _createPawnshopSelected;
+    List<PawnshopDto>? _pawnshopCreationList;
+
+    string _queryBindPawnshop = string.Empty;
+
+    public async Task OnQueryChangedCreateWorker()
+    {
+        if (string.IsNullOrEmpty(_queryBindPawnshop))
+        {
+            _pawnshopCreationList = await Server.PawnshopList(10, 0);
+        }
+        else
+        {
+            _pawnshopCreationList = await Server.PawnshopSearchByAttribute("Name", _queryBindPawnshop, 10, 0);
+        }
+    }
+
+    private async Task CreateNewModel()
+    {
+        CreateModel.PositionId = _createPositionSelected.Id;
+        CreateModel.PawnshopId = _createPawnshopSelected.Id;
+
+        await Server.WorkerAdd(CreateModel);
+
+        CreateModel = new WorkerDto();
+
+        Workers = await Server.WorkerGetAll(Limit, 0, "");
+    }
+
+    #endregion
+    
+}

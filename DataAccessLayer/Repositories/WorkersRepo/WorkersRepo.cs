@@ -33,7 +33,10 @@ public class WorkersRepo : EfRepositoryBase<Worker>, IWorkersRepo {
                 filtered = filtered.Include(w => w.Operations);
             else if (rel == "Mades")
                 filtered = filtered.Include(w => w.Mades);
-            else if (rel == "Pawnshop") filtered = filtered.Include(w => w.Pawnshop);
+            else if (rel == "Pawnshop")
+                filtered = filtered.Include(w => w.Position);
+            else if (rel == "Position")
+                filtered = filtered.Include(w => w.Pawnshop);
         }
 
         return filtered;
@@ -61,41 +64,29 @@ public class WorkersRepo : EfRepositoryBase<Worker>, IWorkersRepo {
     }
 
     public override async Task<List<Worker>> SearchByAttribute(string attribute, string query, int limit, int offset) {
-        List<Worker> workers = new List<Worker>();
-        
-        if (attribute == "Name")
-            workers = await Context.Workers.Where(w => (w.FirstName + " " + w.SecondName + " " + w.ThirdName).Contains(query))
+        if (attribute == "Name") {
+            return await Context.Workers
+                .Where(w => (w.FirstName + " " + w.SecondName + " " + w.ThirdName).Contains(query))
                 .ToListAsync();
-        else if (attribute == "Position") {
-            var workersPos = await Context.WorkerPositions
-                .Where(wp => wp.Name.Contains(query))
-                .Include(wp => wp.Workers)
-                .ToListAsync();
-
-            foreach (var pos in workersPos) {
-                workers.AddRange(pos.Workers);
-            }
-
-            workers = workers
-                .Skip(offset)
-                .Take(limit)
-                .ToList();
         }
 
-        return workers;
+        if (attribute == "Position") {
+            var pos = await Context.WorkerPositions.Where(w => w.Name.Contains(query)).Include(p => p.Workers).FirstOrDefaultAsync();
+
+            if (pos != null) {
+                return pos.Workers.ToList();
+            }
+        }
+
+        return new List<Worker>();
     }
 
+
     public override async Task<List<Worker>> SortByAttribute(string attribute, int limit, int offset) {
-        List<Worker> workers = new List<Worker>();
-
-        if (attribute == "Salary") {
-            await Context.Workers.OrderByDescending(w => w.Salary)
-                .Skip(offset)
-                .Take(limit)
-                .ToListAsync();
-        }
-
-        return workers;
+        return await Context.Workers.OrderByDescending(w => w.Salary)
+            .Skip(offset)
+            .Take(limit)
+            .ToListAsync();
     }
 
     public async Task<WorkerPosition> AddPosition(WorkerPosition workerPosition) {
@@ -103,10 +94,10 @@ public class WorkersRepo : EfRepositoryBase<Worker>, IWorkersRepo {
     }
 
     public async Task<List<WorkerPosition>> GetPositions() {
-        return await Context.WorkerPositions.ToListAsync();
+        return await Context.WorkerPositions.AsNoTracking().ToListAsync();
     }
 
     public async Task<WorkerPosition?> GetPosition(int id) {
-        return await Context.WorkerPositions.SingleOrDefaultAsync(w => w.Id == id);
+        return await Context.WorkerPositions.AsNoTracking().SingleOrDefaultAsync(w => w.Id == id);
     }
 }

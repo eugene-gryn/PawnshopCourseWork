@@ -388,7 +388,7 @@ namespace DataAccessLayer.Migrations
                         .WithMany("Operations")
                         .HasForeignKey("CustomerId1");
 
-                    b.HasOne("DataAccessLayer.Models.OperationType", null)
+                    b.HasOne("DataAccessLayer.Models.OperationType", "OperationType")
                         .WithMany()
                         .HasForeignKey("OperationTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -419,6 +419,8 @@ namespace DataAccessLayer.Migrations
 
                     b.Navigation("Customer");
 
+                    b.Navigation("OperationType");
+
                     b.Navigation("Pawnshop");
 
                     b.Navigation("Worker");
@@ -426,7 +428,7 @@ namespace DataAccessLayer.Migrations
 
             modelBuilder.Entity("DataAccessLayer.Models.Pawnshop", b =>
                 {
-                    b.HasOne("DataAccessLayer.Models.City", null)
+                    b.HasOne("DataAccessLayer.Models.City", "City")
                         .WithMany()
                         .HasForeignKey("CityId")
                         .OnDelete(DeleteBehavior.ClientCascade)
@@ -435,6 +437,8 @@ namespace DataAccessLayer.Migrations
                     b.HasOne("DataAccessLayer.Models.City", null)
                         .WithMany("Pawns")
                         .HasForeignKey("CityId1");
+
+                    b.Navigation("City");
                 });
 
             modelBuilder.Entity("DataAccessLayer.Models.Worker", b =>
@@ -449,7 +453,7 @@ namespace DataAccessLayer.Migrations
                         .WithMany("Workers")
                         .HasForeignKey("PawnshopId1");
 
-                    b.HasOne("DataAccessLayer.Models.WorkerPosition", null)
+                    b.HasOne("DataAccessLayer.Models.WorkerPosition", "Position")
                         .WithMany()
                         .HasForeignKey("PositionId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -460,6 +464,8 @@ namespace DataAccessLayer.Migrations
                         .HasForeignKey("WorkerPositionId");
 
                     b.Navigation("Pawnshop");
+
+                    b.Navigation("Position");
                 });
 
             modelBuilder.Entity("DataAccessLayer.Models.City", b =>

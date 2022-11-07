@@ -40,7 +40,7 @@ public class PawnshopDbContext : DbContext {
 
         modelBuilder.Entity<City>()
             .HasMany<Pawnshop>()
-            .WithOne()
+            .WithOne(p => p.City)
             .HasForeignKey(p => p.CityId)
             .OnDelete(DeleteBehavior.ClientCascade);
 
@@ -58,14 +58,14 @@ public class PawnshopDbContext : DbContext {
 
         modelBuilder.Entity<WorkerPosition>()
             .HasMany<Worker>()
-            .WithOne()
+            .WithOne(w => w.Position)
             .HasForeignKey(w => w.PositionId)
             .OnDelete(DeleteBehavior.Cascade);
 
 
         modelBuilder.Entity<OperationType>()
             .HasMany<Operation>()
-            .WithOne()
+            .WithOne(o => o.OperationType)
             .HasForeignKey(o => o.OperationTypeId)
             .OnDelete(DeleteBehavior.Cascade);
 

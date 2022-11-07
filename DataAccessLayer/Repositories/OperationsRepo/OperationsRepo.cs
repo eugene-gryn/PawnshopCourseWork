@@ -40,13 +40,6 @@ public class OperationsRepo : EfRepositoryBase<Operation>, IOperationRepo {
     }
 
     protected override IQueryable<Operation> ProcessingRelated(IQueryable<Operation> filtered, string[] relations) {
-        foreach (var rel in relations)
-            if (rel == "Worker")
-                filtered = filtered.Include(o => o.Worker);
-            else if (rel == "Pawnshop")
-                filtered = filtered.Include(o => o.Pawnshop);
-            else if (rel == "Customer") filtered = filtered.Include(o => o.Customer);
-
         return filtered;
     }
 

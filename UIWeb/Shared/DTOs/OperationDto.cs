@@ -12,13 +12,14 @@ public class OperationDto
     public int? Sum { get; set; }
 
     [Required] public int OperationTypeId { get; set; }
+    [Required] public OperationTypeDto OperationType { get; set; }
 
     public int? CustomerId { get; set; }
-    public CustomerDto Customer { get; set; }
+    public CustomerDto? Customer { get; set; }
 
     [Required] public int? WorkerId { get; set; }
-    public WorkerDto Worker { get; set; }
+    [Required] public CustomerDto? Worker { get; set; }
 
     [Required] public int PawnshopId { get; set; }
-    public PawnshopDto Pawnshop { get; set; }
+    [Required] public PawnshopDto Pawnshop { get; set; }
 }

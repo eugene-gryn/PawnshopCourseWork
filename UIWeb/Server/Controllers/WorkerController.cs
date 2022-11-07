@@ -31,8 +31,8 @@ public class WorkerController : ServerControllerBase {
     }
 
     [HttpPut]
-    public WorkerDto Update(WorkerDto entity) {
-        return WorkerService.Update(entity);
+    public async Task<WorkerDto> Update(WorkerDto entity) {
+        return await WorkerService.Update(entity);
     }
 
     [HttpPost]

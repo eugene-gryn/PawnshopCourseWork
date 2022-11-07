@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DataAccessLayer.Migrations
 {
-    public partial class Init : Migration
+    public partial class AddPositions : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -76,8 +76,8 @@ namespace DataAccessLayer.Migrations
                     Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     CityId = table.Column<int>(type: "int", nullable: false),
                     Address = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    TimeOpen = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    TimeClose = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    TimeOpen = table.Column<TimeSpan>(type: "time", nullable: false),
+                    TimeClose = table.Column<TimeSpan>(type: "time", nullable: false),
                     MoneyAvailable = table.Column<float>(type: "real", nullable: false),
                     CityId1 = table.Column<int>(type: "int", nullable: true)
                 },

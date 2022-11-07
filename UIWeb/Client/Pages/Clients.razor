@@ -1,2 +1,21 @@
 ﻿@inherits ClientsBase
 @page "/clients"
+@using UIWeb.Shared.DTOs
+
+<PageTitle>Клієнти загальна таблиця</PageTitle>
+
+<ClientsModelComponent 
+
+    UpdateTable="OnInitializedAsync"></ClientsModelComponent>
+
+@code {
+
+    List<CustomerDto>? _customers;
+
+    protected override async Task<Task> OnInitializedAsync() {
+        _customers = await Server.CustomerGetAll(20, 0, "");
+
+        return Task.CompletedTask;
+    }
+
+}

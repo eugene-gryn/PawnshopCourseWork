@@ -16,7 +16,7 @@
     List<WorkerDto>? _workers;
 
     protected override async Task<Task> OnInitializedAsync() {
-        _workers = await Server.WorkerGetAll(20, 0, "");
+        _workers = await Server.WorkerGetAll(20, 0, "Pawnshop,Position");
 
         return Task.CompletedTask;
     }

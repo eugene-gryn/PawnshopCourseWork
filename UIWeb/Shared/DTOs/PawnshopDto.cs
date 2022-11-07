@@ -12,6 +12,9 @@ public class PawnshopDto {
 
     [Required(ErrorMessage = "Потрібно вказати місто!")]
     public int CityId { get; set; }
+    
+    [Required(ErrorMessage = "Потрібно вказати місто!")]
+    public CityDto City { get; set; }
 
     [Required(ErrorMessage = "Заповнення адреси обов'язкове!")]
     [StringLength(100, ErrorMessage = "Адреса може мати 100 символів")]

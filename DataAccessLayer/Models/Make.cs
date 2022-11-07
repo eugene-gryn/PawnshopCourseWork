@@ -2,7 +2,6 @@
 using System.Data.SqlTypes;
 
 namespace DataAccessLayer.Models;
-#nullable disable
 public class Make {
     [Key] public int Id { get; set; }
 
@@ -17,11 +16,11 @@ public class Make {
     public bool IsSold { get; set; } = false;
 
     [Required] public int PawnshopId { get; set; }
-    public Pawnshop Pawnshop { get; set; }
+    [Required] public Pawnshop Pawnshop { get; set; }
 
     public int? WorkerId { get; set; }
-    public Worker Worker { get; set; }
+    public Worker? Worker { get; set; }
 
     public int? CustomerId { get; set; }
-    public Customer Customer { get; set; }
+    public Customer? Customer { get; set; }
 }

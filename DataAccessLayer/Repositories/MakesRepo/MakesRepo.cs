@@ -70,13 +70,6 @@ public class MakesRepo : EfRepositoryBase<Make>, IMakesRepo {
     }
 
     protected override IQueryable<Make> ProcessingRelated(IQueryable<Make> filtered, string[] relations) {
-        foreach (var rel in relations)
-            if (rel == "Pawnshop")
-                filtered = filtered.Include(m => m.Pawnshop);
-            else if (rel == "Worker")
-                filtered = filtered.Include(m => m.Worker);
-            else if (rel == "Customer") filtered = filtered.Include(m => m.Customer);
-
         return filtered;
     }
 }

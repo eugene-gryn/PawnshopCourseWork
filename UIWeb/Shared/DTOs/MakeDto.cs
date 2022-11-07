@@ -18,11 +18,11 @@ public class MakeDto
     public bool IsSold { get; set; } = false;
 
     [Required] public int PawnshopId { get; set; }
-    public PawnshopDto Pawnshop { get; set; }
+    [Required] public PawnshopDto Pawnshop { get; set; }
 
     public int? WorkerId { get; set; }
-    public WorkerDto Worker { get; set; }
+    public WorkerDto? Worker { get; set; }
 
     public int? CustomerId { get; set; }
-    public CustomerDto Customer { get; set; }
+    public CustomerDto? Customer { get; set; }
 }
