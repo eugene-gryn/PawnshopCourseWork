@@ -12,7 +12,52 @@ public class PawnshopRepo : EfRepositoryBase<Pawnshop>, IPawnshopRepo {
     }
 
     public override async Task<Pawnshop?> GetElementById(int id, string[] related) {
-        throw new NotImplementedException();
+        var query = Context.Pawnshops.Where(el => el.Id == id).AsNoTracking();
+
+        query = ProcessingRelated(query, related);
+
+        var entity = await query.SingleOrDefaultAsync();
+
+        if (entity != null) {
+            if (related.Contains("Operations")) {
+                var list = await Context.Operations
+                    .Include(el => el.Pawnshop)
+                    .Include(el => el.Customer)
+                    .Include(el => el.Worker)
+                    .Include(el => el.OperationType)
+                    .Where(el => el.PawnshopId == entity.Id).ToListAsync();
+
+                foreach (var el in list) {
+                    
+                    entity.Operations.Add(el);
+                }
+            }
+            if (related.Contains("Workers")) {
+                var list = await Context.Workers.Where(el => el.PawnshopId == entity.Id)
+                    .Include(el => el.Pawnshop)
+                    .Include(el => el.Position)
+                    .ToListAsync();
+
+                foreach (var el in list)
+                {
+                    entity.Workers.Add(el);
+                }
+            }
+            if (related.Contains("Makes")) {
+                var list = await Context.Makes.Where(el => el.PawnshopId == entity.Id)
+                    .Include(el => el.Pawnshop)
+                    .Include(el => el.Customer)
+                    .Include(el => el.Worker)
+                    .ToListAsync();
+
+                foreach (var el in list)
+                {
+                    entity.Makes.Add(el);
+                }
+            }
+        }
+
+        return entity;
     }
 
     public override async Task<List<Pawnshop>> GetAll(int limit, int offset, string[] related) {
@@ -20,13 +65,7 @@ public class PawnshopRepo : EfRepositoryBase<Pawnshop>, IPawnshopRepo {
             .Skip(offset)
             .Take(limit);
 
-        foreach (var rel in related)
-            if (rel == "Operations")
-                queryable = queryable.Include(p => p.Operations);
-            else if (rel == "Workers")
-                queryable = queryable.Include(p => p.Workers);
-            else if (rel == "Makes") queryable = queryable.Include(p => p.Makes);
-            else if (rel == "City") queryable = queryable.Include(p => p.City);
+        queryable = ProcessingRelated(queryable, related);
 
         return await queryable.ToListAsync();
     }
@@ -147,6 +186,10 @@ public class PawnshopRepo : EfRepositoryBase<Pawnshop>, IPawnshopRepo {
     }
 
     protected override IQueryable<Pawnshop> ProcessingRelated(IQueryable<Pawnshop> filtered, string[] relations) {
-        throw new NotImplementedException();
+        foreach (var rel in relations)
+            if (rel == "City")
+                filtered = filtered.Include(p => p.City);
+
+        return filtered.AsQueryable();
     }
 }

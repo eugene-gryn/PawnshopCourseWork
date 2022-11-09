@@ -22,9 +22,10 @@ public class PawnshopsController : ServerControllerBase {
     }
 
     [HttpGet(ControllerBaseRoute + "/{id}")]
-    public async Task<ActionResult<PawnshopDto>> PawnshopGetById(int id) {
-        return Ok(await PawnS.GetPawnById(id));
+    public async Task<ActionResult<PawnshopDto>> PawnshopGetById(int id, string? r) {
+        return Ok(await PawnS.GetPawnById(id, r ?? ""));
     }
+
 
     [HttpPut]
     public PawnshopDto PawnshopUpdate(PawnshopDto pawnshop) {
@@ -67,4 +68,25 @@ public class PawnshopsController : ServerControllerBase {
         [FromQuery] int offset) {
         return await PawnS.SortBy(attribute, limit, offset);
     }
+
+
+    #region Statistic
+
+
+    [HttpGet(ControllerBaseRoute + "/statistic/getMonthAvgValues")]
+    public async Task<Dictionary<string, double>> GetLastMonthAvgValue(int id) {
+        return await PawnS.GetLastMonthAvgValue(id);
+    }
+
+    [HttpGet(ControllerBaseRoute + "/statistic/getLastYearMoneyIncome")]
+    public async Task<Dictionary<string, double>> GetLastYearMoneyFlows(int id) {
+        return await PawnS.GetLastYearMoneyFlows(id);
+    }
+
+    [HttpGet(ControllerBaseRoute + "/statistic/getPercentOfClosedMakesPerMonth")]
+    public async Task<double> GetPercentOfClosedMakesPerMonth(int id) {
+        return await PawnS.GetPercentOfClosedMakesPerMonth(id);
+    }
+
+    #endregion
 }

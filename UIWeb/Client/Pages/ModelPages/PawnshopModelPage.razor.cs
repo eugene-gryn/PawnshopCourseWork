@@ -119,12 +119,4 @@ public class PawnshopModelPageBase : PawnshopBaseComponent {
 
         AuthorizeS.Navigation.NavigateTo(AuthorizeS.Navigation.BaseUri);
     }
-
-    public async Task DeleteModel() {
-        Console.WriteLine("Deleting....");
-
-        await Server.PawnshopDelete(ModelId);
-
-        AuthorizeS.Navigation.NavigateTo(AuthorizeS.BasePage);
-    }
 }

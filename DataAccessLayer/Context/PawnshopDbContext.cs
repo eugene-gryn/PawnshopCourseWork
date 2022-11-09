@@ -26,40 +26,47 @@ public class PawnshopDbContext : DbContext {
             .HasMany<Operation>()
             .WithOne(o => o.Pawnshop)
             .HasForeignKey(o => o.PawnshopId)
+            .IsRequired()
             .OnDelete(DeleteBehavior.Cascade);
         modelBuilder.Entity<Pawnshop>()
             .HasMany<Worker>()
             .WithOne(w => w.Pawnshop)
             .HasForeignKey(w => w.PawnshopId)
+            .IsRequired()
             .OnDelete(DeleteBehavior.Cascade);
         modelBuilder.Entity<Pawnshop>()
             .HasMany<Make>()
             .WithOne(m => m.Pawnshop)
             .HasForeignKey(m => m.PawnshopId)
+            .IsRequired()
             .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<City>()
             .HasMany<Pawnshop>()
             .WithOne(p => p.City)
             .HasForeignKey(p => p.CityId)
-            .OnDelete(DeleteBehavior.ClientCascade);
+            .IsRequired()
+            .OnDelete(DeleteBehavior.Cascade);
 
 
         modelBuilder.Entity<Worker>()
             .HasMany<Operation>()
             .WithOne(o => o.Worker)
             .HasForeignKey(o => o.WorkerId)
+            .IsRequired()
             .OnDelete(DeleteBehavior.ClientSetNull);
         modelBuilder.Entity<Worker>()
             .HasMany<Make>()
             .WithOne(m => m.Worker)
             .HasForeignKey(o => o.WorkerId)
+            .IsRequired()
             .OnDelete(DeleteBehavior.ClientSetNull);
 
         modelBuilder.Entity<WorkerPosition>()
             .HasMany<Worker>()
             .WithOne(w => w.Position)
             .HasForeignKey(w => w.PositionId)
+            .IsRequired()
             .OnDelete(DeleteBehavior.Cascade);
 
 
@@ -67,6 +74,7 @@ public class PawnshopDbContext : DbContext {
             .HasMany<Operation>()
             .WithOne(o => o.OperationType)
             .HasForeignKey(o => o.OperationTypeId)
+            .IsRequired()
             .OnDelete(DeleteBehavior.Cascade);
 
 
@@ -79,9 +87,11 @@ public class PawnshopDbContext : DbContext {
             .HasMany<Make>()
             .WithOne(m => m.Customer)
             .HasForeignKey(o => o.CustomerId)
+            .IsRequired()
             .OnDelete(DeleteBehavior.ClientSetNull);
         // Check in Db that Customer older than 18 years
         modelBuilder.Entity<Customer>()
             .HasCheckConstraint("CHK_DateIsGrater18", "(DATEDIFF(year, Birthday, GETDATE()) > 17)");
+
     }
 }

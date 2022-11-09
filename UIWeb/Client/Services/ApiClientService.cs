@@ -21,8 +21,8 @@ public class ApiClientService {
         return await Http.GetFromJsonAsync<List<PawnshopDto>>($"{PawnshopPrefix}?l={l}&o={o}&r={r}");
     }
 
-    public async Task<PawnshopDto?> PawnshopById(int id) {
-        return await Http.GetFromJsonAsync<PawnshopDto?>($"{PawnshopPrefix}/{id}");
+    public async Task<PawnshopDto?> PawnshopById(int id, string related = "") {
+        return await Http.GetFromJsonAsync<PawnshopDto?>($"{PawnshopPrefix}/{id}?r={related}");
     }
 
     public async Task<HttpResponseMessage> PawnshopUpdate(PawnshopDto pawnshop) {
@@ -94,6 +94,20 @@ public class ApiClientService {
 
     public async Task<WorkerPositionDto?> GetWorkerPosition(int id) {
         return await Http.GetFromJsonAsync<WorkerPositionDto>($"{WorkerPrefix}/positions/{id}");
+    }
+
+    public async Task<Dictionary<string, double>?> GetLastMonthAvgValue(int id) { 
+        return await Http.GetFromJsonAsync <Dictionary<string, double>>($"{PawnshopPrefix}/statistic/getMonthAvgValues?id={id}");
+    }
+
+    public async Task<Dictionary<string, double>?> GetLastYearMoneyFlows(int id)
+    {
+        return await Http.GetFromJsonAsync<Dictionary<string, double>>($"{PawnshopPrefix}/statistic/getLastYearMoneyIncome?id={id}");
+    }
+
+    public async Task<double> GetPercentOfClosedMakesPerMonth(int id)
+    {
+        return await Http.GetFromJsonAsync<double>($"{PawnshopPrefix}/statistic/getPercentOfClosedMakesPerMonth?id={id}");
     }
 
 

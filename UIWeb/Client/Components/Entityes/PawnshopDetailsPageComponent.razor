@@ -1,0 +1,177 @@
+﻿@inherits UIWeb.Client.Pages.PawnshopBaseComponent
+@using UIWeb.Shared.DTOs
+@inject NavigationManager Nav
+@inject IDialogService DialogService
+
+@if (Model == null) {
+    <Loading />
+}
+@if (Model != null) {
+    <h3 class="mb-5 mt-3 text-center">@Model.Name</h3>
+
+    <div class="d-flex flex-row justify-content-between my-4">
+        <p>Адреса:</p>
+        <p>@($"м.{Model.City.Name} {Model.Address}")</p>
+    </div>
+
+    <div class="d-flex flex-row justify-content-between my-4">
+        <p>Відкриття:</p>
+        <p>@Model.TimeOpen.ToString("g")</p>
+    </div>
+
+    <div class="d-flex flex-row justify-content-between my-4">
+        <p>Закриття:</p>
+        <p>@Model.TimeClose.ToString("g")</p>
+    </div>
+
+    <div class="d-flex flex-row justify-content-between my-4">
+        <p class="mx-5" style="margin-left: 0 !important">Кількість грошей в касі:</p>
+        <p>@(Model.MoneyAvailable + " грн")</p>
+    </div>
+            
+    <div class="my-2 text-center">
+        <a class="btn btn-danger" @onclick="DeleteDialog">Видалити</a>
+    </div>
+
+    <div>
+        <OperationModelComponent 
+            Text="@("Операції - " + Model.Name)"
+            Dependent="true"
+            Operations="Model.Operations.ToList()"
+            UpdateTable="UpdateModel"/>
+    </div>
+
+    <hr />
+
+    <div>
+        <WorkersModelComponent 
+            Text="@("Робітники - " + Model.Name)"
+            Dependent="true"
+            Workers="Model.Workers.ToList()"
+            UpdateTable="UpdateModel"/>
+    </div>
+
+    <hr />
+
+    <div>
+        <MakeModelComponent 
+            Text="@("Застави - " + Model.Name)"
+            Dependent="true"
+            Makes="Model.Makes.ToList()"
+            UpdateTable="UpdateModel"/>
+    </div>
+
+    <MudText Class="text-center my-4" Typo="Typo.h6">@("Відсоток залогів, які забрали: " + (int)PercentOfClosedMakesPerMonth)%</MudText>
+
+    <hr />
+
+    <div class="border border-2 border-dark rounded p-2 my-3">
+        <div>
+            <MudChart 
+                ChartType="ChartType.Bar" 
+                ChartSeries="@LastMonthAvgValues" 
+                XAxisLabels="@YearMonths" 
+                Width="100%" 
+                Height="350px" />
+        </div>
+        <MudText Class="text-center mt-2" Typo="Typo.h6">@("Загальна сума: " + (int)LastMonthAvgValuesAll + " тис. грн")</MudText>
+    </div>
+    <div class="border border-2 border-dark rounded p-2 my-3">
+        <div>
+            <MudChart 
+                ChartType="ChartType.Bar"
+                ChartSeries="@LastYearMoneyFlows"
+                XAxisLabels="@YearMonths" 
+                Width="100%" 
+                Height="350px" />
+        </div>
+        <MudText Class="text-center my-2" Typo="Typo.h6">@("Загальна сума: " + (int)LastYearMoneyFlowsAll + " тис. грн")</MudText>
+    </div>
+}
+
+
+
+
+@code {
+
+
+    #region Charts
+
+    public List<ChartSeries> LastMonthAvgValues = new();
+    public List<ChartSeries> LastYearMoneyFlows = new();
+    public double PercentOfClosedMakesPerMonth;
+    
+    public double LastMonthAvgValuesAll;
+    public double LastYearMoneyFlowsAll;
+
+    public string[]? YearMonths;
+
+
+    protected override async Task<Task> OnInitializedAsync() {
+        var lastMonthAvg = await Server.GetLastMonthAvgValue(ModelId);
+        var lastYearMoneyFlows = await Server.GetLastYearMoneyFlows(ModelId);
+        PercentOfClosedMakesPerMonth = await Server.GetPercentOfClosedMakesPerMonth(ModelId);
+
+        if (lastMonthAvg != null) {
+            YearMonths = lastMonthAvg.Select(k => k.Key).ToArray();
+            
+            var lastMonthAvgArr = lastMonthAvg
+                .Select(k => k.Value / 1000).ToArray();
+            LastMonthAvgValuesAll = lastMonthAvgArr.Sum();
+            LastMonthAvgValues.Add(new ChartSeries() {
+                Name = "Прибуток по місяцях (тис грн)",
+                Data = lastMonthAvgArr
+            });
+        }
+
+        if (lastYearMoneyFlows != null) {
+            YearMonths = lastYearMoneyFlows
+                .Select(k => k.Key).ToArray();
+
+            var lastYearMoneyFlowsArr = lastYearMoneyFlows
+                .Select(k => k.Value / 1000).ToArray();
+            LastYearMoneyFlowsAll = lastYearMoneyFlowsArr.Sum();
+            LastYearMoneyFlows.Add(new ChartSeries() {
+                Name = "Оборот грошей в місяць (тис грн)",
+                Data = lastYearMoneyFlowsArr
+            });
+        }
+
+        return Task.CompletedTask;
+    }
+
+    #endregion
+
+    public PawnshopDto? Model { get; set; }
+
+    [Parameter]
+    public int ModelId { get; set; }
+
+    protected override async Task OnParametersSetAsync() {
+        await UpdateModel();
+    }
+
+    public async Task UpdateModel() {
+        Model = await Server.PawnshopById(ModelId, "Operations,Workers,Makes,City");
+    }
+
+    public async Task DeleteDialog() {
+        var options = new MudBlazor.DialogOptions { CloseOnEscapeKey = true };
+
+        var elem = DialogService.Show<YesNoDialogComponent>("Видалення елемента", options);
+
+        var result = await elem.Result;
+
+        if (!result.Cancelled) {
+            await DeleteModel();
+        }
+    }
+
+    public async Task DeleteModel() {
+        Console.WriteLine("Deleting....");
+
+        await Server.PawnshopDelete(ModelId);
+
+        AuthorizeS.Navigation.NavigateTo(AuthorizeS.BasePage);
+    }
+}
