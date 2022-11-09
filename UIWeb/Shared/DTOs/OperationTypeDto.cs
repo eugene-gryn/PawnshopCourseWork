@@ -9,5 +9,13 @@ public class OperationTypeDto
 
     [Required, StringLength(50)] public string Name { get; set; }
 
+    public override string ToString() {
+        return $"{Name} - {Id}";
+    }
+
+    public override int GetHashCode() {
+        return Id.GetHashCode();
+    }
+
     public ICollection<OperationDto> Operations { get; set; } = new List<OperationDto>();
 }

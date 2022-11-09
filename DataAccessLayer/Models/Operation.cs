@@ -2,6 +2,7 @@
 
 namespace DataAccessLayer.Models;
 
+#nullable disable
 public class Operation {
     [Key] public int Id { get; set; }
 
@@ -10,15 +11,15 @@ public class Operation {
     public int? Sum { get; set; }
 
     [Required] public int OperationTypeId { get; set; }
-    [Required] public OperationType OperationType { get; set; }
+    public OperationType OperationType { get; set; }
 
     public int? CustomerId { get; set; }
     public Customer? Customer { get; set; }
 
     [Required] public int? WorkerId { get; set; }
-    [Required] public Worker? Worker { get; set; }
+    public Worker? Worker { get; set; }
 
 
     [Required] public int PawnshopId { get; set; }
-    [Required] public Pawnshop Pawnshop { get; set; }
+    public Pawnshop Pawnshop { get; set; }
 }

@@ -49,9 +49,10 @@ public class WorkerController : ServerControllerBase {
     }
 
     [HttpGet(ControllerBaseRoute + "/search")]
-    public async Task<List<WorkerDto>> SearchByAttribute([FromQuery] string a, [FromQuery] string q, [FromQuery] int l,
+    public async Task<List<WorkerDto>> SearchByAttribute([FromQuery] string a, [FromQuery] string? q, [FromQuery] int l,
         [FromQuery] int o) {
-        return await WorkerService.SearchByAttribute(a, q, l, o);
+        
+        return await WorkerService.SearchByAttribute(a, q ?? "", l, o);
     }
 
     [HttpGet(ControllerBaseRoute + "/sort")]

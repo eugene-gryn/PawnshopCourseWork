@@ -76,15 +76,17 @@ public class WorkersRepo : EfRepositoryBase<Worker>, IWorkersRepo {
         if (attribute == "Name") {
             return await Context.Workers
                 .Where(w => (w.FirstName + " " + w.SecondName + " " + w.ThirdName).Contains(query))
+                .Include(w => w.Position)
+                .Include(w => w.Pawnshop)
                 .ToListAsync();
         }
 
         if (attribute == "Position") {
-            var pos = await Context.WorkerPositions.Where(w => w.Name.Contains(query)).Include(p => p.Workers).FirstOrDefaultAsync();
-
-            if (pos != null) {
-                return pos.Workers.ToList();
-            }
+            return await Context.Workers
+                .Include(w => w.Position)
+                .Include(w => w.Pawnshop)
+                .Where(w => w.Position.Name.Contains(query))
+                .ToListAsync();
         }
 
         return new List<Worker>();

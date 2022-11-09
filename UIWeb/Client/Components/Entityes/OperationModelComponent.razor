@@ -1,0 +1,412 @@
+﻿@using UIWeb.Client.Services
+@using UIWeb.Shared.DTOs
+@inherits ComponentBase
+@inject ApiClientService Server
+@inject IDialogService DialogService
+
+
+<div class="container">
+@if (Operations == null) {
+    <Loading/>
+}
+@if (Operations != null) {
+    @if (!Dependent) {
+        <div class="d-flex flex-wrap">
+            <MudTextField @bind-Value="_searchStringPosition" TextChanged="QueryTextChangedOperationType"
+                          Placeholder="Пошук за типом операції"
+                          Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0 mx-1">
+            </MudTextField>
+            <MudTextField @bind-Value="_searchStringCustomer" TextChanged="QueryTextChangedCustomer"
+                          Placeholder="Пошук за клієнтом"
+                          Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0 mx-1">
+            </MudTextField>
+            <MudTextField @bind-Value="_searchStringWorker" TextChanged="QueryTextChangedWorker"
+                          Placeholder="Пошук за робітником"
+                          Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0 mx-1">
+            </MudTextField>
+            <MudTextField @bind-Value="_searchStringPawnshop" TextChanged="QueryTextChangedPawnshop"
+                          Placeholder="Пошук за ломбардом"
+                          Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0 mx-1">
+            </MudTextField>
+        </div>
+    }
+
+    <div class="m-3">
+        <MudTable Items="@Operations"
+                  Dense="false"
+                  Hover="true"
+                  HorizontalScrollbar="true"
+                  ReadOnly="false"
+                  CanCancelEdit="true"
+                  Filter="new Func<OperationDto, bool>(FilterFunc)"
+                  @bind-SelectedItem="SelectedItem"
+                  SortLabel="Сортувати за.."
+                  CommitEditTooltip="Зберегти"
+                  CancelEditTooltip="Видалити"
+                  OnCommitEditClick="@(CommitEdit)"
+                  RowEditPreview="BackupItem"
+                  RowEditCancel="async obj => await RemoveOrResetValue(obj)"
+                  RowEditCommit="async args => await ItemHasBeenCommitted(args)"
+                  IsEditRowSwitchingBlocked="true"
+                  ApplyButtonPosition="@TableApplyButtonPosition.End">
+            <ToolBarContent>
+                <MudText Typo="Typo.h6">@Text</MudText>
+                @if (!Dependent) {
+                    <MudButton OnClick="LoadMoreToTable"
+                               ButtonType="ButtonType.Button" Variant="Variant.Filled"
+                               EndIcon="@Icons.Material.Filled.Add" Color="Color.Success" Class="mx-2">
+                        Завантажити ще
+                    </MudButton>
+                }
+
+                <MudSpacer/>
+                @if (!Dependent) {
+                    <div class="d-flex flex-wrap">
+                        <MudTextField @bind-Value="_searchStringName" TextChanged="QueryTextChangedDescription"
+                                      Placeholder="Пошук за описом"
+                                      Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0 mx-1">
+                        </MudTextField>
+                    </div>
+                }
+
+            </ToolBarContent>
+            <ColGroup>
+                <col style="width: 15%;"/>
+                <col style="width: 15%;"/>
+                <col style="width: 5%;"/>
+                <col style="width: 15%;"/>
+                <col style="width: 15%;"/>
+                <col style="width: 15%;"/>
+                <col style="width: 20%;"/>
+            </ColGroup>
+            <HeaderContent>
+                <MudTh>
+                    <MudTableSortLabel SortBy="new Func<OperationDto, object>(x => x.Created)">Створення</MudTableSortLabel>
+                </MudTh>
+                <MudTh>
+                    <MudTableSortLabel SortBy="new Func<OperationDto, object>(x => x.Description)">Опис</MudTableSortLabel>
+                </MudTh>
+                <MudTh>
+                    <MudTableSortLabel SortBy="new Func<OperationDto, object>(x => x.Sum)">Вартість</MudTableSortLabel>
+                </MudTh>
+                <MudTh>
+                    <MudTableSortLabel SortBy="new Func<OperationDto, object>(x => x.OperationType.Name)">Тип</MudTableSortLabel>
+                </MudTh>
+                <MudTh>
+                    <MudTableSortLabel SortBy="new Func<OperationDto, object>(x => x.Customer?.Serial)">Клієнт</MudTableSortLabel>
+                </MudTh>
+                <MudTh>
+                    <MudTableSortLabel SortBy="new Func<OperationDto, object>(x => x.Worker?.FirstName)">Робітник</MudTableSortLabel>
+                </MudTh>
+                <MudTh>
+                    <MudTableSortLabel SortBy="new Func<OperationDto, object>(x => x.Pawnshop.Name)">Ломбард</MudTableSortLabel>
+                </MudTh>
+
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd DataLabel="Створення">@context.Created</MudTd>
+                <MudTd DataLabel="Опис">@context.Description</MudTd>
+                <MudTd DataLabel="Вартість">@context.Sum</MudTd>
+                <MudTd DataLabel="Тип">@context.OperationType.Name</MudTd>
+                <MudTd DataLabel="Клієнт">@context.Customer</MudTd>
+                <MudTd DataLabel="Робітник">@context.Worker</MudTd>
+                <MudTd DataLabel="Ломбард">@context.Pawnshop</MudTd>
+            </RowTemplate>
+            <RowEditingTemplate>
+                <MudTd DataLabel="Опис">
+                    <MudTextField @bind-Value="@context.Description"/>
+                </MudTd>
+                <MudTd DataLabel="Сума">
+                    <MudNumericField @bind-Value="@context.Sum"/>
+                </MudTd>
+                <MudTd DataLabel="Тип операції">
+                    <MudSelect @bind-Value="@context.OperationType" T="OperationTypeDto"
+                               Label="Тип операції" Variant="Variant.Filled"
+                               AnchorOrigin="Origin.BottomCenter">
+                        @if (Types != null) {
+                            foreach (var position in Types) {
+                                <MudSelectItem Value="@position"/>
+                            }
+                        }
+                    </MudSelect >
+                </MudTd>
+                <MudTd DataLabel="Клієнт">
+                    <MudAutocomplete T="CustomerDto"
+                                     Label="Ломбард" @bind-Value="@context.Customer"
+                                     SearchFunc="s => OnCustomerSelectQueryChangedFunc(s)" Variant="Variant.Outlined"
+                                     ShowProgressIndicator="true" ProgressIndicatorColor="Color.Warning"/>
+                </MudTd>
+                <MudTd DataLabel="Робітник">
+                    <MudAutocomplete T="WorkerDto"
+                                     Label="Ломбард" @bind-Value="@context.Worker"
+                                     SearchFunc="s => OnWorkerSelectQueryChangedFunc(s)" Variant="Variant.Outlined"
+                                     ShowProgressIndicator="true" ProgressIndicatorColor="Color.Warning"/>
+                </MudTd>
+                <MudTd DataLabel="Ломбард">
+                    <MudAutocomplete T="PawnshopDto"
+                                     Label="Ломбард" @bind-Value="@context.Pawnshop"
+                                     SearchFunc="s => OnPawnshopSelectQueryChangedFunc(s)" Variant="Variant.Outlined"
+                                     ShowProgressIndicator="true" ProgressIndicatorColor="Color.Warning"/>
+                </MudTd>
+            </RowEditingTemplate>
+            <PagerContent>
+                <MudTablePager/>
+            </PagerContent>
+        </MudTable>
+        @if (!Dependent) {
+            <div class="mt-4 p-2 border-2 border-dark rounded">
+                <MudText Typo="Typo.h6">Додавання нової операції:</MudText>
+                <EditForm Model="@_createModel" OnValidSubmit="async () => await CreateNewModel()">
+                    <DataAnnotationsValidator/>
+                    <ValidationSummary/>
+
+                    <MudTextField Сlass="mb-2" Label="Опис" @bind-Value="_createModel.Description" Variant="Variant.Filled"/>
+                    <MudNumericField Сlass="mb-2" Label="Сума" @bind-Value="_createModel.Sum" Variant="Variant.Filled"/>
+
+                    <hr/>
+
+                    <MudSwitch @bind-Checked="@_modeCreationPosition" Label="Додати тип" Color="Color.Info" Class="my-2"/>
+
+                    <div class="d-flex flex-row flex-wrap">
+                        @if (_modeCreationPosition) {
+                            <MudTextField @bind-Value="_typeTextName" Label="Новий тип" Variant="Variant.Outlined"></MudTextField>
+                            <MudButton OnClick="OnCreateOperationTypeButtonClick" Class="mx-2" Variant="Variant.Text" Color="Color.Success">Додати</MudButton>
+                        }
+                        @if (!_modeCreationPosition) {
+                            <MudAutocomplete T="OperationTypeDto"
+                                             Label="Тип операції" @bind-Value="@_createModel.OperationType"
+                                             SearchFunc="s => OnTypeSelectQueryChangedFunc(s)" Variant="Variant.Outlined"
+                                             ShowProgressIndicator="true" ProgressIndicatorColor="Color.Warning"/>
+                        }
+
+                        <div class="mx-2">
+                            <MudAutocomplete T="CustomerDto"
+                                             Label="Клієнт" @bind-Value="_createModel.Customer"
+                                             SearchFunc="s => OnCustomerSelectQueryChangedFunc(s)" Variant="Variant.Outlined"
+                                             ShowProgressIndicator="true" ProgressIndicatorColor="Color.Warning"/>
+                        </div>
+
+                        <div class="mx-2">
+                            <MudAutocomplete T="WorkerDto"
+                                             Label="Обробник" @bind-Value="_createModel.Worker"
+                                             SearchFunc="s => OnWorkerSelectQueryChangedFunc(s)" Variant="Variant.Outlined"
+                                             ShowProgressIndicator="true" ProgressIndicatorColor="Color.Warning"/>
+                        </div>
+
+                        <div class="mx-2">
+                            <MudAutocomplete T="PawnshopDto"
+                                             Label="Ломбард" @bind-Value="_createModel.Pawnshop"
+                                             SearchFunc="s => OnPawnshopSelectQueryChangedFunc(s)" Variant="Variant.Outlined"
+                                             ShowProgressIndicator="true" ProgressIndicatorColor="Color.Warning"/>
+                        </div>
+
+                    </div>
+
+                    <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.Add" Color="Color.Success" Class="mt-3">Створити</MudButton>
+                </EditForm>
+
+
+            </div>
+        }
+
+    </div>
+}
+
+</div>
+
+@code {
+
+    protected override async Task<Task> OnParametersSetAsync() {
+        Types = await Server.GetOperationTypeList();
+        return base.OnParametersSetAsync();
+    }
+
+    [Parameter]
+    public bool Dependent { get; set; }
+
+    [Parameter]
+    public string Text { get; set; }
+
+
+    #region Table
+
+    OperationDto SelectedItem;
+
+    [Parameter]
+    public List<OperationDto>? Operations { get; set; }
+
+    [Parameter]
+    public EventCallback UpdateTable { get; set; }
+
+
+    public List<OperationTypeDto>? Types { get; set; }
+
+
+    private bool FilterFunc(OperationDto arg) {
+        return true;
+    }
+
+    private void CommitEdit() { }
+
+    private void BackupItem(object obj) {
+        SelectedItem = new OperationDto(obj as OperationDto);
+    }
+
+    private async Task RemoveOrResetValue(object obj) {
+        var el = obj as OperationDto;
+
+        if (el != null) {
+            el.Restore(SelectedItem);
+
+            var options = new DialogOptions {CloseOnEscapeKey = true};
+
+            var res = DialogService
+                .Show<YesNoDialogComponent>($"Видалення оперції {el.Description}?", options);
+
+            var result = await res.Result;
+
+            if (!result.Cancelled) {
+                await Server.OperationDelete(el.Id);
+                await UpdateTable.InvokeAsync();
+            }
+        }
+    }
+
+    private async Task ItemHasBeenCommitted(object obj) {
+        if (obj is OperationDto el) {
+            await Server.OperationUpdate(el);
+        }
+    }
+
+    #endregion
+
+
+    #region Dependent
+
+    bool searchByPosition = false;
+
+    int Limit = 10;
+
+    private async Task SearchByQueryWorkers(string attribute, string? query) {
+        if (string.IsNullOrEmpty(query)) {
+            Operations = await Server.OperationGetAll(Limit, 0, "Customer,Worker,Pawnshop,OperationType");
+            return;
+        }
+
+        Operations = await Server.OperationSearchByAttribute(attribute, query, Limit, 0);
+    }
+
+    private async Task QueryTextChangedDescription() {
+        if (_searchStringName != null) await SearchByQueryWorkers("Description", _searchStringName);
+    }
+
+    private async Task QueryTextChangedOperationType() {
+        if (_searchStringPosition != null) await SearchByQueryWorkers("OperationType", _searchStringPosition);
+    }
+
+    private async Task QueryTextChangedCustomer() {
+        if (_searchStringCustomer != null) await SearchByQueryWorkers("Customer", _searchStringCustomer);
+    }
+
+    private async Task QueryTextChangedWorker() {
+        if (_searchStringWorker != null) await SearchByQueryWorkers("Worker", _searchStringWorker);
+    }
+
+    private async Task QueryTextChangedPawnshop() {
+        if (_searchStringPawnshop != null) await SearchByQueryWorkers("Pawnshop", _searchStringPawnshop);
+    }
+
+    private async Task LoadMoreToTable() {
+        Limit += 10;
+        Operations = await Server.OperationGetAll(Limit, 0, "Customer,Worker,Pawnshop,OperationType");
+    }
+
+    private string? _searchStringName;
+    private string? _searchStringPosition;
+
+    private string? _searchStringCustomer;
+    private string? _searchStringWorker;
+    private string? _searchStringPawnshop;
+
+    #endregion
+
+
+    #region Creation
+
+
+    #region CreatePosition
+
+    private bool _modeCreationPosition;
+
+    private string? _typeTextName;
+
+    private async Task OnCreateOperationTypeButtonClick() {
+        Console.WriteLine($"Create position {_typeTextName}");
+
+        if (!string.IsNullOrEmpty(_typeTextName)) {
+            await Server.AddOperationType(new OperationTypeDto {Name = _typeTextName});
+        }
+
+        _typeTextName = string.Empty;
+        Types = await Server.GetOperationTypeList();
+    }
+
+    #endregion
+
+
+    OperationDto _createModel = new();
+
+    private async Task<IEnumerable<PawnshopDto>> OnPawnshopSelectQueryChangedFunc(string s) {
+        if (string.IsNullOrEmpty(s)) {
+            var list = await Server.PawnshopList(10, 0, "City");
+            if (list != null) return list;
+        }
+
+        return await Server.PawnshopSearchByAttribute("Name", s, 10, 0);
+    }
+
+    private async Task<IEnumerable<CustomerDto>> OnCustomerSelectQueryChangedFunc(string s) {
+        if (string.IsNullOrEmpty(s)) {
+            var list = await Server.CustomerGetAll(10, 0, "City");
+            if (list != null) return list;
+        }
+
+        return await Server.CustomerSearchByAttribute("Name", s, 10, 0) ?? new List<CustomerDto>();
+    }
+
+    private async Task<IEnumerable<WorkerDto>> OnWorkerSelectQueryChangedFunc(string s) {
+        if (string.IsNullOrEmpty(s)) {
+            var list = await Server.WorkerGetAll(10, 0, "City");
+            if (list != null) return list;
+        }
+
+        return await Server.WorkerSearchByAttribute("Name", s, 10, 0) ?? new List<WorkerDto>();
+    }
+
+    private async Task<IEnumerable<OperationTypeDto>> OnTypeSelectQueryChangedFunc(string s) {
+        if (string.IsNullOrEmpty(s)) return Types ?? new List<OperationTypeDto>();
+
+        return await Server.GetOperationTypeList() ?? new List<OperationTypeDto>();
+    }
+
+
+    private async Task CreateNewModel() {
+        _createModel.PawnshopId = _createModel.Pawnshop.Id;
+        _createModel.CustomerId = _createModel.Customer?.Id;
+        _createModel.WorkerId = _createModel.Worker?.Id;
+
+        await Server.OperationAdd(_createModel);
+
+        _createModel = new OperationDto {
+            Pawnshop = _createModel.Pawnshop,
+            Customer = _createModel.Customer,
+            Worker = _createModel.Worker
+        };
+
+        Operations = await Server.OperationGetAll(Limit, 0, "Customer,Worker,Pawnshop,OperationType");
+    }
+
+    #endregion
+
+
+}

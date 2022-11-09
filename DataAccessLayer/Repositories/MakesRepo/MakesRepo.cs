@@ -47,11 +47,39 @@ public class MakesRepo : EfRepositoryBase<Make>, IMakesRepo {
         var makes = new List<Make>();
 
         if (attribute == "Name") {
-            makes = await Context.Makes.Where(m => m.Name.Contains(query)).ToListAsync();
+            makes = await Context.Makes.Where(m => m.Name.Contains(query))
+                
+                .ToListAsync();
         }
-        else if (attribute == "Value") {
-            var queryInt = int.Parse(query);
-            makes = await Context.Makes.Where(m => m.Value == queryInt).ToListAsync();
+        else {
+            var queryable = Context.Makes
+                .Include(m => m.Pawnshop)
+                .Include(m => m.Worker)
+                .Include(m => m.Customer)
+                .AsQueryable();
+
+            if (attribute == "Pawnshop") {
+                queryable = queryable
+                    .Where(m => m.Pawnshop.Name.Contains(query));
+            }
+            else if (attribute == "Worker") {
+                queryable = queryable
+                    .Where(m =>
+                    m.Worker.FirstName.Contains(query) ||
+                    m.Worker.SecondName.Contains(query) ||
+                    m.Worker.SecondName.Contains(query));
+
+            }
+            else if (attribute == "Customer") {
+                queryable = queryable
+                    .Where(m =>
+                        m.Worker.FirstName.Contains(query) ||
+                        m.Worker.SecondName.Contains(query) ||
+                        m.Worker.SecondName.Contains(query));
+
+            }
+
+            makes = await queryable.ToListAsync();
         }
 
         return makes;
@@ -70,6 +98,17 @@ public class MakesRepo : EfRepositoryBase<Make>, IMakesRepo {
     }
 
     protected override IQueryable<Make> ProcessingRelated(IQueryable<Make> filtered, string[] relations) {
+        foreach (var rel in relations) {
+            if (rel == "Pawnshop") {
+                filtered = filtered.Include(m => m.Pawnshop);
+            }
+            else if (rel == "Worker") {
+                filtered = filtered.Include(m => m.Worker);
+            }
+            else if (rel == "Customer") {
+                filtered = filtered.Include(m => m.Customer);
+            }
+        }
         return filtered;
     }
 }

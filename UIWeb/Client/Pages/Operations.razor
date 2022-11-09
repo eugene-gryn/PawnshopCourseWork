@@ -1,2 +1,23 @@
 ﻿@inherits OperationsBase
 @page "/operations"
+@using UIWeb.Shared.DTOs
+
+<PageTitle>Операції - загальна таблиця</PageTitle>
+
+<OperationModelComponent 
+    Operations="_operations"
+    Text="Операції"
+    Dependent="false"
+    UpdateTable="OnInitializedAsync"></OperationModelComponent>
+
+@code {
+
+    List<OperationDto>? _operations;
+
+    protected override async Task<Task> OnInitializedAsync() {
+        _operations = await Server.OperationGetAll(20, 0, "Customer,Worker,Pawnshop,OperationType");
+
+        return Task.CompletedTask;
+    }
+
+}

@@ -16,7 +16,7 @@ public class Make {
     public bool IsSold { get; set; } = false;
 
     [Required] public int PawnshopId { get; set; }
-    [Required] public Pawnshop Pawnshop { get; set; }
+    public Pawnshop Pawnshop { get; set; }
 
     public int? WorkerId { get; set; }
     public Worker? Worker { get; set; }

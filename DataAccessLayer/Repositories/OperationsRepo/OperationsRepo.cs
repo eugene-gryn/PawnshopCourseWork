@@ -40,6 +40,12 @@ public class OperationsRepo : EfRepositoryBase<Operation>, IOperationRepo {
     }
 
     protected override IQueryable<Operation> ProcessingRelated(IQueryable<Operation> filtered, string[] relations) {
+        foreach (var rel in relations) {
+            if (rel == "Customer") filtered = filtered.Include(o => o.Customer);
+            else if (rel == "Worker") filtered = filtered.Include(o => o.Worker);
+            else if (rel == "Pawnshop") filtered = filtered.Include(o => o.Pawnshop);
+            else if (rel == "OperationType") filtered = filtered.Include(o => o.OperationType);
+        }
         return filtered;
     }
 
@@ -65,32 +71,52 @@ public class OperationsRepo : EfRepositoryBase<Operation>, IOperationRepo {
         SearchByAttribute(string attribute, string query, int limit, int offset) {
         var operations = new List<Operation>();
 
+        var queryable = Context.Operations
+            .Include(o => o.OperationType)
+            .Include(o => o.Pawnshop)
+            .Include(o => o.Worker)
+            .Include(o => o.Customer)
+            .AsQueryable();
+
         if (attribute == "Created") {
             var date = DateTime.Parse(query);
 
             operations = await Context.Operations.Where(o => o.Created == date)
-                .Skip(offset)
-                .Take(limit)
                 .ToListAsync();
         }
         else if (attribute == "Description") {
             operations = await Context.Operations.Where(o => o.Description != null && o.Description.Contains(query))
-                .Skip(offset)
-                .Take(limit)
                 .ToListAsync();
         }
         else if (attribute == "OperationType") {
-            var list = await Context.OperationTypes.Where(ot => ot.Name.Contains(query)).Include(ot => ot.Operations)
+            operations = await queryable
+                .Where(o => o.OperationType.Name.Contains(query))
                 .ToListAsync();
-
-            foreach (var type in list) operations.AddRange(type.Operations);
-            operations = operations
-                .Skip(offset)
-                .Take(limit)
-                .ToList();
+        }
+        else if (attribute == "Pawnshop") {
+            operations = await queryable
+                .Where(o => o.Pawnshop.Name.Contains(query))
+                .ToListAsync();
+        }
+        else if (attribute == "Worker") {
+            operations = await queryable
+                .Where(o => 
+                    o.Worker.FirstName.Contains(query) || 
+                    o.Worker.SecondName.Contains(query) || 
+                    o.Worker.SecondName.Contains(query))
+                .ToListAsync();
+        }
+        else if (attribute == "Customer") {
+            operations = await queryable
+                .Where(o => 
+                    o.Customer.FirstName.Contains(query) || 
+                    o.Customer.SecondName.Contains(query) || 
+                    o.Customer.SecondName.Contains(query) ||
+                    o.Customer.Number.Contains(query))
+                .ToListAsync();
         }
 
-        return operations;
+        return operations.ToList();
     }
 
     public override async Task<List<Operation>> SortByAttribute(string attribute, int limit, int offset) {

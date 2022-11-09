@@ -1,20 +1,16 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.Text;
 
 namespace UIWeb.Shared.DTOs.Validation;
 
 [AttributeUsage(AttributeTargets.Property)]
-public class AgeIsGrater18 : ValidationAttribute
-{
-    public override bool IsValid(object value)
-    {
-        if (!(value is DateTime))
-        {
-            return false;
-        }
+public class AgeIsGrater18 : ValidationAttribute {
+    public string ErrorMessage { get; set; }
 
-        DateTime Date = (DateTime)value;
+    protected override ValidationResult? IsValid(object? value, ValidationContext validationContext) {
+        if (value is not DateTime time) return new ValidationResult(ErrorMessage);
 
-        return (DateTime.UtcNow - Date).Days / 365.25 > 18.0;
+        if (!((DateTime.UtcNow - time).Days / 365.25 > 18.0)) return new ValidationResult(ErrorMessage);
+
+        return ValidationResult.Success;
     }
 }

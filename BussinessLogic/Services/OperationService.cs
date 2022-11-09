@@ -25,6 +25,15 @@ public class OperationService : BaseService {
     }
 
     public OperationDto Update(OperationDto entity) {
+        entity.PawnshopId = entity.Pawnshop.Id;
+        entity.Pawnshop = null;
+        entity.CustomerId = entity.Customer?.Id;
+        entity.Customer = null;
+        entity.WorkerId = entity.Worker?.Id;
+        entity.Worker = null;
+        entity.OperationTypeId = entity.OperationType.Id;
+        entity.OperationType = null;
+
         var res = Mapper.Map<OperationDto>(Uow.Operations.Update(
             Mapper.Map<Operation>(entity)));
 
@@ -34,6 +43,16 @@ public class OperationService : BaseService {
     }
 
     public async Task<OperationDto> Add(OperationDto entity) {
+        entity.Id = 0;
+        entity.PawnshopId = entity.Pawnshop.Id;
+        entity.Pawnshop = null;
+        entity.CustomerId = entity.Customer?.Id;
+        entity.Customer = null;
+        entity.WorkerId = entity.Worker?.Id;
+        entity.Worker = null;
+        entity.OperationTypeId = entity.OperationType.Id;
+        entity.OperationType = null;
+
         var res = Mapper.Map<OperationDto>(await Uow.Operations.Add(Mapper.Map<Operation>(entity)));
 
         await Uow.SaveAsync();

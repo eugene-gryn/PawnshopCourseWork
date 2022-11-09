@@ -9,7 +9,7 @@ public class Pawnshop {
     [Required, StringLength(50)] public string Name { get; set; }
 
     [Required] public int CityId { get; set; }
-    [Required] public City City { get; set; }
+    public City City { get; set; }
 
     [Required, StringLength(100)] public string Address { get; set; }
 

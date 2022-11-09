@@ -43,11 +43,19 @@ public class WorkerDto {
     [StringLength(50)] public string ThirdName { get; set; }
 
     [Required] public int PositionId { get; set; }
-    [Required] public WorkerPositionDto Position { get; set; }
+    public WorkerPositionDto Position { get; set; }
     [Required] public int Salary { get; set; }
 
     [Required] public int PawnshopId { get; set; }
-    [Required] public PawnshopDto Pawnshop { get; set; }
+    public PawnshopDto Pawnshop { get; set; }
+
+    public override string ToString() {
+        return $"{FirstName} {SecondName} {ThirdName} - {Id}";
+    }
+
+    public override int GetHashCode() {
+        return Id.GetHashCode();
+    }
 
     public ICollection<OperationDto> Operations { get; set; } = new List<OperationDto>();
     public ICollection<MakeDto> Mades { get; set; } = new List<MakeDto>();

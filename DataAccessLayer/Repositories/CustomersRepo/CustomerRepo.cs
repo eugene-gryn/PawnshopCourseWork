@@ -51,6 +51,10 @@ public class CustomerRepo : EfRepositoryBase<Customer>, ICustomerRepo {
             workers = await Context.Customers
                 .Where(w => (w.FirstName + " " + w.SecondName + " " + w.ThirdName).Contains(query))
                 .ToListAsync();
+        if (attribute == "SerialNumber")
+            workers = await Context.Customers
+                .Where(w => (w.Serial + " " + w.Number).Contains(query))
+                .ToListAsync();
 
         return workers;
     }

@@ -1,2 +1,23 @@
-﻿@inherits MakesBase
+﻿@using UIWeb.Shared.DTOs
+@inherits MakesBase
 @page "/makes"
+
+<PageTitle>Застави - загальна таблиця</PageTitle>
+
+<MakeModelComponent Makes="_makes"
+                    Text="Операції"
+                    Dependent="false"
+                    UpdateTable="OnInitializedAsync" />
+
+@code {
+
+    List<MakeDto>? _makes;
+
+    protected override async Task<Task> OnInitializedAsync()
+    {
+        _makes = await Server.MakeGetAll(20, 0, "Customer,Worker,Pawnshop");
+
+        return Task.CompletedTask;
+    }
+
+}
