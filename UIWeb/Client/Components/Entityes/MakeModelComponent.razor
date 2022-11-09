@@ -261,7 +261,7 @@
             var result = await res.Result;
 
             if (!result.Cancelled) {
-                await Server.OperationDelete(el.Id);
+                await Server.MakeDelete(el.Id);
                 await UpdateTable.InvokeAsync();
             }
         }
@@ -334,7 +334,7 @@
 
     private async Task<IEnumerable<CustomerDto>> OnCustomerSelectQueryChangedFunc(string s) {
         if (string.IsNullOrEmpty(s)) {
-            var list = await Server.CustomerGetAll(10, 0, "City");
+            var list = await Server.CustomerGetAll(10, 0, "");
             if (list != null) return list;
         }
 
@@ -343,7 +343,7 @@
 
     private async Task<IEnumerable<WorkerDto>> OnWorkerSelectQueryChangedFunc(string s) {
         if (string.IsNullOrEmpty(s)) {
-            var list = await Server.WorkerGetAll(10, 0, "City");
+            var list = await Server.WorkerGetAll(10, 0, "");
             if (list != null) return list;
         }
 

@@ -20,7 +20,7 @@ public class MakesRepo : EfRepositoryBase<Make>, IMakesRepo {
     }
 
     public override async Task<List<Make>> GetAll(int limit, int offset, string[] related) {
-        var query = Context.Makes.Skip(offset).Take(limit);
+        var query = Context.Makes.AsNoTracking().Skip(offset).Take(limit);
 
         query = ProcessingRelated(query, related);
 
@@ -36,51 +36,51 @@ public class MakesRepo : EfRepositoryBase<Make>, IMakesRepo {
     }
 
     public override async Task<bool> Delete(int id) {
-        var el = await GetElementById(id);
+        var el = await GetElementById(id, new string[] {"Pawnshop", "Worker", "Customer" });
 
         if (el == null) return false;
 
-        return Context.Remove(el).IsKeySet;
+        Context.Makes.Remove(el);
+        return true;
     }
 
     public override async Task<List<Make>> SearchByAttribute(string attribute, string query, int limit, int offset) {
         var makes = new List<Make>();
 
-        if (attribute == "Name") {
-            makes = await Context.Makes.Where(m => m.Name.Contains(query))
-                
-                .ToListAsync();
-        }
-        else {
-            var queryable = Context.Makes
-                .Include(m => m.Pawnshop)
-                .Include(m => m.Worker)
-                .Include(m => m.Customer)
-                .AsQueryable();
+        var queryable = Context.Makes
+            .Include(m => m.Pawnshop)
+            .Include(m => m.Worker)
+            .Include(m => m.Customer)
+            .AsQueryable();
 
-            if (attribute == "Pawnshop") {
-                queryable = queryable
-                    .Where(m => m.Pawnshop.Name.Contains(query));
-            }
-            else if (attribute == "Worker") {
-                queryable = queryable
-                    .Where(m =>
+        if (attribute == "Name") {
+            queryable = queryable.Where(m => m.Name.Contains(query));
+        }
+        if (attribute == "Pawnshop")
+        {
+            queryable = queryable
+                .Where(m => m.Pawnshop.Name.Contains(query));
+        }
+        else if (attribute == "Worker")
+        {
+            queryable = queryable
+                .Where(m =>
                     m.Worker.FirstName.Contains(query) ||
                     m.Worker.SecondName.Contains(query) ||
                     m.Worker.SecondName.Contains(query));
 
-            }
-            else if (attribute == "Customer") {
-                queryable = queryable
-                    .Where(m =>
-                        m.Worker.FirstName.Contains(query) ||
-                        m.Worker.SecondName.Contains(query) ||
-                        m.Worker.SecondName.Contains(query));
-
-            }
-
-            makes = await queryable.ToListAsync();
         }
+        else if (attribute == "Customer")
+        {
+            queryable = queryable
+                .Where(m =>
+                    m.Worker.FirstName.Contains(query) ||
+                    m.Worker.SecondName.Contains(query) ||
+                    m.Worker.SecondName.Contains(query));
+
+        }
+
+        makes = await queryable.AsNoTracking().ToListAsync();
 
         return makes;
     }
