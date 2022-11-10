@@ -9,11 +9,11 @@ namespace UIWeb.Server.Controllers;
 public class WorkerController : ServerControllerBase {
     private const string ControllerBaseRoute = "/api/workers";
 
-    public WorkerController(WorkerService workerService) {
+    public WorkerController(S workerService) {
         WorkerService = workerService;
     }
 
-    public WorkerService WorkerService { get; }
+    public S WorkerService { get; }
 
     [HttpPost(ControllerBaseRoute + "/positions")]
     public async Task<WorkerPositionDto> AddPosition(WorkerPositionDto workerPosition) {

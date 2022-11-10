@@ -18,6 +18,4 @@ public interface IRepository<T> {
 
     // Unsafe for optimization methods
     public IQueryable<T> ReadAsQuery();
-
-
 }

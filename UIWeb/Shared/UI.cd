@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="UIWeb.Server.Controllers.AuthorizeController" Collapsed="true">
+    <Position X="6.5" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAQAAEAAAAAAAAAAAAAAAAAAADAAAAAAAAAAAAA=</HashCode>
+      <FileName>Controllers\AuthorizeController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UIWeb.Server.Controllers.CustomerController" Collapsed="true">
+    <Position X="13.25" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAaAQAAAAACAAAAAAAAAAAAACAEAAAAAAgAAABAAAAA=</HashCode>
+      <FileName>Controllers\CustomerController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UIWeb.Server.Controllers.MakeController" Collapsed="true">
+    <Position X="17.75" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAaAQAAAAAAAAAAAAAAAAAAACAEAAAEAAgAAABAAAAA=</HashCode>
+      <FileName>Controllers\MakeController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UIWeb.Server.Controllers.OperationController" Collapsed="true">
+    <Position X="8.75" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIbAQAAAAAAAAAAAAAAAgAAACBEAAAAAAgAAABAAAAA=</HashCode>
+      <FileName>Controllers\OperationController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UIWeb.Server.Controllers.PawnshopsController" Collapsed="true">
+    <Position X="15.5" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAAEAAEAAAAAAAAAAggAAABECAAAACAAEAAAAJABBAE=</HashCode>
+      <FileName>Controllers\PawnshopsController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UIWeb.Server.Controllers.ServerControllerBase" Collapsed="true">
+    <Position X="12" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Controllers\ServerControllerBase.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UIWeb.Server.Controllers.WorkerController" Collapsed="true">
+    <Position X="11" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAaAQAABACAAAAAAAAAAAAAACAEAAAAAAgAAABAAQAA=</HashCode>
+      <FileName>Controllers\WorkerController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UIWeb.Server.Pages.ErrorModel" Collapsed="true">
+    <Position X="12.25" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAIAAQAAAAAAAAAIAAAAAAAAAQAAAAAAAA=</HashCode>
+      <FileName>Pawnshops\Error.cshtml.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

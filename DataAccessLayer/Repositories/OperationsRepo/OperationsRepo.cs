@@ -78,13 +78,7 @@ public class OperationsRepo : EfRepositoryBase<Operation>, IOperationRepo {
             .Include(o => o.Customer)
             .AsQueryable();
 
-        if (attribute == "Created") {
-            var date = DateTime.Parse(query);
-
-            operations = await Context.Operations.Where(o => o.Created == date)
-                .ToListAsync();
-        }
-        else if (attribute == "Description") {
+        if (attribute == "Description") {
             operations = await Context.Operations.Where(o => o.Description != null && o.Description.Contains(query))
                 .ToListAsync();
         }

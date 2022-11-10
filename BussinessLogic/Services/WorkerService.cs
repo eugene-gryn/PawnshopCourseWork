@@ -5,8 +5,8 @@ using UIWeb.Shared.DTOs;
 
 namespace BusinessLogic.Services;
 
-public class WorkerService : BaseService {
-    public WorkerService(IMapper mapper, IUow uow) : base(mapper, uow) { }
+public class S : BaseService {
+    public S(IMapper mapper, IUow uow) : base(mapper, uow) { }
 
     public async Task<WorkerPositionDto> AddPosition(WorkerPositionDto workerPosition) {
         var res = Mapper.Map<WorkerPositionDto>(
